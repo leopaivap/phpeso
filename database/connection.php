@@ -2,9 +2,10 @@
 $server = 'localhost';
 $user = 'root';
 $password = '';
+$database = 'db_phpeso';
 
 try {
-    $dsn = "mysql:host=$server;charset=utf8";
+    $dsn = "mysql:host=$server;dbname=$database;charset=utf8";
 
     $connection = new PDO($dsn, $user, $password);
 

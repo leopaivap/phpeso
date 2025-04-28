@@ -74,7 +74,7 @@
             <label for="role" class="form-label">Tipo de Conta</label>
             <select class="form-select" id="role" name="role">
               <option value="user">Cliente</option>
-              <option value="admin">Treinador</option>
+              <option value="trainer">Treinador</option>
               <option value="admin">Administrador</option>
             </select>
           </div>

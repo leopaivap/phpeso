@@ -11,8 +11,8 @@ try {
     $sql = "CREATE DATABASE IF NOT EXISTS db_phpeso";
     $connection->exec($sql);
 
-    echo "Banco de dados 'db_phpeso' criado com sucesso (ou já existia).";
+  //  echo "Banco de dados 'db_phpeso' criado com sucesso (ou já existia).";
 } catch (PDOException $e) {
-    echo "Erro ao criar o banco de dados: " . $e->getMessage();
+    //echo "Erro ao criar o banco de dados: " . $e->getMessage();
 }
 ?>

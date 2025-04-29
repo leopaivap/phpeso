@@ -27,7 +27,7 @@ try {
         );
     ";
     $connection->exec($sql);
-    echo "Tabela 'users' criada com sucesso (ou já existia).<br>";
+   // echo "Tabela 'users' criada com sucesso (ou já existia).<br>";
 
     // TABELA DE GRUPOS MUSCULARES
     $sql = "
@@ -38,7 +38,7 @@ try {
         );    
     ";
     $connection->exec($sql);
-    echo "Tabela 'muscle_groups' criada com sucesso (ou já existia).<br>";
+   // echo "Tabela 'muscle_groups' criada com sucesso (ou já existia).<br>";
 
     // TABELA DE EXERCÍCIOS
     $sql = "
@@ -54,7 +54,7 @@ try {
         );
     ";
     $connection->exec($sql);
-    echo "Tabela 'exercises' criada com sucesso (ou já existia).<br>";
+   // echo "Tabela 'exercises' criada com sucesso (ou já existia).<br>";
 
     $sql = "
         CREATE TABLE IF NOT EXISTS trainings (
@@ -69,7 +69,7 @@ try {
             );
     ";
     $connection->exec($sql);
-    echo "Tabela 'trainings' criada com sucesso (ou já existia).<br>";
+ //   echo "Tabela 'trainings' criada com sucesso (ou já existia).<br>";
 
     $sql = "
         CREATE TABLE IF NOT EXISTS training_exercises (
@@ -85,9 +85,9 @@ try {
             );
     ";
     $connection->exec($sql);
-    echo "Tabela 'training_exercises' criada com sucesso (ou já existia).<br>";
+   // echo "Tabela 'training_exercises' criada com sucesso (ou já existia).<br>";
 
 } catch (PDOException $e) {
-    echo "Erro ao criar a tabela: " . $e->getMessage();
+   // echo "Erro ao criar a tabela: " . $e->getMessage();
 }
 ?>

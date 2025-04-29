@@ -1,4 +1,7 @@
 <?php
+include_once 'create-database.php';
+include_once 'create-table.php';
+
 $server = 'localhost';
 $user = 'root';
 $password = '';
@@ -11,8 +14,8 @@ try {
 
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Conexão com o SGBD estabelecida com sucesso!";
+   // echo "Conexão com o SGBD estabelecida com sucesso!";
 } catch (PDOException $e) {
-    echo "Erro na conexão com o servidor: " . $e->getMessage();
+   // echo "Erro na conexão com o servidor: " . $e->getMessage();
 }
 ?>

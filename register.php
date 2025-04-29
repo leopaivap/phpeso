@@ -16,7 +16,7 @@
   <main class="container d-flex align-items-center justify-content-center" style="min-height: 80vh">
     <div class="w-100">
       <h2 class="mb-4 text-center">Criar Conta</h2>
-      <form class="register-form" action="./database/users/user-register.php" method="POST">
+      <form class="register-form" action="./database/users/insert-user.php" method="POST">
         <div class="userData" style="w-100">
           <div class="row">
             <div class="col-md-6 mb-3">

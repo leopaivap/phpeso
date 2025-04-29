@@ -1,8 +1,20 @@
 <?php
 include_once "../connection.php";
+include_once "user-validator.php";
+
 
 date_default_timezone_set('America/Sao_Paulo');
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $errors = validateUser($_POST);
+
+    if (count($errors) > 0) {
+        session_start();
+        $_SESSION['errors'] = $errors;
+        header("Location: ../../register.php");
+        exit;
+    }
+
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $phoneNumber = $_POST['phoneNumber'];

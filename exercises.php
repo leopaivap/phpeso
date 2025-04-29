@@ -52,15 +52,19 @@
 
     <?php
     session_start();
-    if (isset($_SESSION['erros'])) {
-      echo '<div class="alert alert-danger" role="alert">' . $_SESSION['erros'] . '</div>';
-      unset($_SESSION['erros']);
+    if (isset($_SESSION['errors']) && is_array($_SESSION['errors'])) {
+      echo '<div class="alert alert-danger" role="alert"><ul>';
+      foreach ($_SESSION['errors'] as $error) {
+        echo '<li>' . htmlspecialchars($error) . '</li>';
+      }
+      echo '</ul></div>';
+      unset($_SESSION['errors']);
     }
     ?>
 
 
-    <form class="row g-3" action="./database/exercise/insert-exercise.php<?= $editing ? '?id=' . $id : '' ?>"
-      method="POST">
+    <form id="exerciseForm" class="row g-3"
+      action="./database/exercise/insert-exercise.php<?= $editing ? '?id=' . $id : '' ?>" method="POST">
 
       <div class="col-md-6">
         <label for="exercise_name" class="form-label">Nome do Exercício:</label>
@@ -113,8 +117,6 @@
     ob_start();
 
     include_once "./database/connection.php";
-
-
 
     ob_end_clean();
 
@@ -180,53 +182,7 @@
   <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    // Função para validar o formulário
-    document.querySelector('form').addEventListener('submit', function (event) {
-      let valid = true;
-
-      // Validar o nome
-      const nameField = document.getElementById('exercise_name');
-      if (nameField.value.trim() === '') {
-        alert('O campo "Nome do Exercício" é obrigatório.');
-        valid = false;
-      }
-
-      // Validar o tipo de exercício
-      const typeField = document.getElementById('exercise_type');
-      if (typeField.value.trim() === '') {
-        alert('O campo "Tipo de Exercício" é obrigatório.');
-        valid = false;
-      }
-
-      // Validar a descrição
-      const descriptionField = document.getElementById('description');
-      if (descriptionField.value.trim() === '') {
-        alert('O campo "Descrição" é obrigatório.');
-        valid = false;
-      }
-
-      // Validar a seleção de grupo muscular
-      const muscleGroupField = document.getElementById('muscle_group');
-      if (muscleGroupField.value === '') {
-        alert('Você precisa selecionar um grupo muscular.');
-        valid = false;
-      }
-
-      // Validar a dificuldade
-      const difficultyField = document.getElementById('difficulty');
-      if (difficultyField.value === '') {
-        alert('Você precisa selecionar a dificuldade.');
-        valid = false;
-      }
-
-      // Impede o envio do formulário se houver erros
-      if (!valid) {
-        event.preventDefault();
-      }
-    });
-  </script>
+  <script src="js/exercise-validator.js"></script>
 
 </body>
 

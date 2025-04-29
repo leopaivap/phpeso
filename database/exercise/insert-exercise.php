@@ -1,37 +1,15 @@
 <?php
 include_once "../connection.php";
+include_once "exercise-validator.php";
 
 date_default_timezone_set('America/Sao_Paulo');
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $errors = validateExercise($_POST);
 
-    $errors = [];
-
-    // Validações
-    if (empty($_POST['exercise_name']) || strlen(trim($_POST['exercise_name'])) < 5) {
-        $errors[] = 'O campo "Nome do Exercício" é obrigatório e deve ter pelo menos 5 caracteres.';
-    }
-
-    if (empty($_POST['exercise_type']) || strlen(trim($_POST['exercise_type'])) < 5) {
-        $errors[] = 'O campo "Tipo de Exercício" é obrigatório e e deve ter pelo menos 5 caracteres.';
-    }
-
-    if (empty($_POST['description']) || strlen(trim($_POST['description'])) < 5) {
-        $errors[] = 'O campo "Descrição" é obrigatório e deve ter pelo menos 5 caracteres.';
-    }
-
-    if (empty($_POST['muscle_group'])) {
-        $errors[] = 'Você precisa selecionar um grupo muscular.';
-    }
-
-    if (empty($_POST['difficulty'])) {
-        $errors[] = 'Você precisa selecionar a dificuldade.';
-    }
-
-    // Se houver erros, redireciona de volta com os erros
-    if (!empty($errors)) {
+    if (count($errors) > 0) {
         session_start();
-        $_SESSION['erros'] = implode('<br>', $errors);
-        header('Location: .../exercises.php');
+        $_SESSION['errors'] = $errors;
+        header("Location: ../../exercises.php");
         exit;
     }
 

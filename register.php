@@ -28,7 +28,7 @@
         unset($_SESSION['errors']);
       }
       ?>
-      
+
       <form class="register-form" action="./database/users/insert-user.php" method="POST">
         <div class="userData" style="w-100">
           <div class="row">
@@ -104,6 +104,7 @@
   <script src="js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/login_register.js"></script>
+  <script src="js/register-validator.js"></script>
 
 </body>
 

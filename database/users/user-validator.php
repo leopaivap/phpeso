@@ -1,5 +1,7 @@
 <?php
-function validateUser($data)
+include_once "../connection.php";
+
+function validateUser($connection, $data)
 {
     $errors = [];
 
@@ -27,6 +29,10 @@ function validateUser($data)
         $errors[] = 'O campo "Usuário" é obrigatório e deve ter entre 5 e 30 caracteres.';
     }
 
+    if (!validateUsernameAvailable($connection, $data['username'])) {
+        $errors[] = "O nome de usuário {$data['username']} já está em uso.";
+    }
+
     if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL) || strlen($data['email']) > 255) {
         $errors[] = 'Informe um email válido com no máximo 255 caracteres.';
     }
@@ -40,5 +46,19 @@ function validateUser($data)
     }
 
     return $errors;
+}
+
+function validateUsernameAvailable($connection, $username)
+{
+    date_default_timezone_set('America/Sao_Paulo');
+    try {
+        $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+        $stmt->execute([':username' => $username,]);
+        $count = $stmt->fetchColumn();
+
+        return $count == 0;
+    } catch (PDOException $e) {
+        return false;
+    }
 }
 ?>

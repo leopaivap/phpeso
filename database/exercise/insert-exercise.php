@@ -43,7 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ':created_at' => $created_at
         ]);
 
-        echo "Exercício cadastrado com sucesso!";
+        // echo "Exercício cadastrado com sucesso!";
+        header("Location: ../../exercises.php");
     } catch (PDOException $e) {
         echo "Erro ao cadastrar usuário: " . $e->getMessage();
     }

@@ -64,7 +64,8 @@
 
 
     <form id="exerciseForm" class="row g-3"
-      action="./database/exercise/insert-exercise.php<?= $editing ? '?id=' . $id : '' ?>" method="POST">
+      action="./database/exercise/<?= $editing ? 'update-exercise.php?id=' . $id : 'insert-exercise.php' ?>"
+      method="POST">
 
       <div class="col-md-6">
         <label for="exercise_name" class="form-label">Nome do Exercício:</label>
@@ -106,7 +107,7 @@
 
       </div>
       <div class="col-12">
-        <button type="submit" class="btn btn-dark">Cadastrar</button>
+        <button type="submit" class="btn btn-dark"><?= $editing ? 'Salvar' : 'Cadastrar' ?></button>
       </div>
     </form>
 
@@ -167,7 +168,7 @@
             }
             echo "<td>" . htmlspecialchars($difficultyText) . "</td>";
             echo "<td>" . htmlspecialchars($exercise['description']) . "</td>";
-            echo "<td><a href='//?id=" . $exercise['id'] . "'>Editar</a> | <a href='./database/exercise/delete-exercise.php?id=" . $exercise['id'] . "'>Excluir</a></td>";
+            echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href='./database/exercise/delete-exercise.php?id=" . $exercise['id'] . "'>Excluir</a></td>";
             echo "</tr>";
           }
         } else {

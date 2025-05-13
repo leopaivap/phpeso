@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FitCrud - Home</title>
+    <title>PhPeso - Home</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -16,7 +16,7 @@
     <main class="container mt-5">
       <div class="row align-items-center">
         <div class="col-md-6">
-          <h1 class="display-4 text-orange">FitCrud</h1>
+          <h1 class="display-4 text-orange">PhPeso</h1>
           <p class="lead">
             Gerencie seus treinos de academia com facilidade! Visualize,
             adicione e acompanhe seus treinos e exercícios de forma simples.

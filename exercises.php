@@ -11,7 +11,11 @@
 
 <body>
   <?php
+  include_once 'auth-guard.php';
+
   include_once "./database/connection.php";
+
+  $canManage = in_array($_SESSION['user_role'], ['admin', 'trainer']);
 
   $id = $_GET['id'] ?? null;
   $editing = false;
@@ -42,7 +46,8 @@
   $muscleStmt->execute();
   $muscleGroups = $muscleStmt->fetchAll(PDO::FETCH_ASSOC);
   ?>
-  <div id="navbar"></div>
+
+  <?php include_once 'templates/navbar.php'; ?>
 
 
   <main class="container mt-5">
@@ -122,7 +127,13 @@
     ob_end_clean();
 
 
-    $query = "SELECT * FROM exercises";
+    $query = "
+    SELECT 
+        exercises.*, 
+        muscle_groups.name AS muscle_group_name 
+    FROM exercises 
+    JOIN muscle_groups ON exercises.muscle_group_id = muscle_groups.id
+";
     $stmt = $connection->prepare($query);
     $stmt->execute();
 
@@ -140,7 +151,8 @@
           <th>Grupo Muscular</th>
           <th>Dificuldade</th>
           <th>Descrição</th>
-          <th>Ações</th>
+          <?php if ($canManage): ?>
+            <th>Ações</th> <?php endif; ?>
         </tr>
       </thead>
       <tbody>
@@ -154,11 +166,8 @@
             echo "<td>" . htmlspecialchars($exercise['exercise_type']) . "</td>";
 
             // Carrega o nome do grupo muscular
-            $muscleGroupQuery = "SELECT name FROM muscle_groups WHERE id = :muscle_group_id";
-            $muscleStmt = $connection->prepare($muscleGroupQuery);
-            $muscleStmt->execute([':muscle_group_id' => $exercise['muscle_group_id']]);
-            $muscleGroup = $muscleStmt->fetch(PDO::FETCH_ASSOC);
-            echo "<td>" . htmlspecialchars($muscleGroup['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($exercise['muscle_group_name']) . "</td>";
+
             if ($exercise['difficulty'] == "beginner") {
               $difficultyText = "Iniciante";
             } elseif ($exercise['difficulty'] == "intermediate") {
@@ -168,7 +177,9 @@
             }
             echo "<td>" . htmlspecialchars($difficultyText) . "</td>";
             echo "<td>" . htmlspecialchars($exercise['description']) . "</td>";
-            echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href='./database/exercise/delete-exercise.php?id=" . $exercise['id'] . "'>Excluir</a></td>";
+            if ($canManage) {
+              echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href='./database/exercise/delete-exercise.php?id=" . $exercise['id'] . "'>Excluir</a></td>";
+            }
             echo "</tr>";
           }
         } else {
@@ -180,7 +191,6 @@
   </main>
 
   <div id="footer"></div>
-  <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/exercise-validator.js"></script>

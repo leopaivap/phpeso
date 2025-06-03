@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Treinos - FitCrud</title>
@@ -7,8 +8,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <div id="navbar"></div>
+  <?php
+  include_once 'auth-guard.php';
+  include_once 'templates/navbar.php';
+  ?>
 
   <main class="container mt-5">
     <h2 class="mb-4">Cadastrar Novo Treino</h2>
@@ -64,8 +69,8 @@
   </main>
 
   <div id="footer"></div>
-  <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

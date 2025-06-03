@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div id="navbar"></div>
+<?php include_once 'templates/navbar.php'; ?>
 
   <main class="container d-flex align-items-center justify-content-center" style="min-height: 80vh">
     <div class="w-100">
@@ -100,7 +100,6 @@
 
   <div id="footer"></div>
 
-  <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/login_register.js"></script>

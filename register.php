@@ -29,7 +29,7 @@
       }
       ?>
 
-      <form class="register-form" action="./database/users/insert-user.php" method="POST">
+      <form class="register-form" action="./app/controller/UserController.php" method="POST">
         <div class="userData" style="w-100">
           <div class="row">
             <div class="col-md-6 mb-3">

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../repository/Connection';
+require_once __DIR__ . '/../repository/Connection.php';
 
 class UserController
 {
@@ -13,11 +13,12 @@ class UserController
     }
 
 
-
     public function insert(array $data): void
     {
-
-        $response = $this->userService->insert($data);
+        $response = false;
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $response = $this->userService->insert($data);
+        }
 
         if ($response) {
             header('Location: /views/success.php');

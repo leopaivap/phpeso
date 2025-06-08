@@ -1,5 +1,5 @@
 <?php
-
+require_once "./app/exception/ValidationException.php";
 class InvalidUserEmailException extends ValidationException
 {
     public function __construct()
@@ -7,5 +7,3 @@ class InvalidUserEmailException extends ValidationException
         parent::__construct("E-mail inválido.");
     }
 }
-
-?>

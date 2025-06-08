@@ -1,4 +1,5 @@
 <?php
+require_once "./app/exception/ValidationException.php";
 
 class InvalidUserPhoneNumberException extends ValidationException
 {

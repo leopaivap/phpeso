@@ -1,5 +1,7 @@
 <?php
 
+require_once "./app/exception/ValidationException.php";
+
 class InvalidUsernameException extends ValidationException
 {
     public function __construct()
@@ -7,5 +9,3 @@ class InvalidUsernameException extends ValidationException
         parent::__construct("Nome de usuário inválido.");
     }
 }
-
-?>

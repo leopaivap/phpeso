@@ -31,7 +31,7 @@
         {
             if ($data === null || empty($data) || $id === null || empty($id)) return;
 
-            if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response = $this->exerciseService->update($id, $data);
                 if ($response) {
                     header('Location: ./app/view/exercise/exercises.php');

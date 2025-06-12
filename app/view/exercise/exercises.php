@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../../repository/Connection.php'; ?>
+require_once '../../repository/Connection.php' ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
-  <title>Exercícios - FitCrud</title>
+  <title>Exercícios - PhPeso</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="../../../public/css/style.css">
@@ -29,6 +29,7 @@ require_once __DIR__ . '/../../repository/Connection.php'; ?>
   ];
 
   // Se estiver editando, busca os dados do exercício
+  // ReqGet
   if ($id) {
     $stmt = $connection->prepare("SELECT * FROM exercises WHERE id = :id");
     $stmt->execute([':id' => $id]);
@@ -66,9 +67,7 @@ require_once __DIR__ . '/../../repository/Connection.php'; ?>
     ?>
 
 
-    <form id="exerciseForm" class="row g-3"
-      action="<?= $editing ? `/phpeso/index.php?controller=exercise&action=update` : "/phpeso/index.php?controller=exercise&action=insert" ?>"
-      method="<?php $editing ? "PUT" : "POST" ?>">
+    <form id="exerciseForm" class="row g-3" action=<?= $editing ? "/phpeso/index.php?controller=exercise&action=update&id=$id" : "/phpeso/index.php?controller=exercise&action=insert" ?> method="POST">
 
       <div class="col-md-6">
         <label for="exercise_name" class="form-label">Nome do Exercício:</label>
@@ -117,20 +116,13 @@ require_once __DIR__ . '/../../repository/Connection.php'; ?>
     <hr class="my-5" />
 
     <?php
-
-    ob_start();
-
-    include_once "./app/repository/Connection.php";
-
-    ob_end_clean();
-
-
+    // TODO HTTP REQUEST
+    $connection = Connection::getInstance()->getConnection();
     $query = "SELECT * FROM exercises";
     $stmt = $connection->prepare($query);
     $stmt->execute();
 
     $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     ?>
 
     <h3>Exercícios Cadastrados</h3>

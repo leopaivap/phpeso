@@ -67,7 +67,7 @@ require_once __DIR__ . '/../../repository/Connection.php'; ?>
 
 
     <form id="exerciseForm" class="row g-3"
-      action="<?= $editing ? `/fit-crud/index.php?controller=exercise&action=update` : "/fit-crud/index.php?controller=exercise&action=insert" ?>"
+      action="<?= $editing ? `/phpeso/index.php?controller=exercise&action=update` : "/phpeso/index.php?controller=exercise&action=insert" ?>"
       method="<?php $editing ? "PUT" : "POST" ?>">
 
       <div class="col-md-6">

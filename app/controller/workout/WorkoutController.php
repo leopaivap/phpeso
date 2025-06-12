@@ -24,7 +24,7 @@ class WorkoutController
                 exit;
             } else {
                 echo "Erro ao cadastrar treino.";
-                require '/fit-crud/index.php';
+                require '/phpeso/index.php';
             }
         }
     }
@@ -40,7 +40,7 @@ class WorkoutController
                 exit;
             } else {
                 echo "Erro ao alterar o usuário.";
-                require '/fit-crud/index.php';
+                require '/phpeso/index.php';
             }
         }
     }
@@ -53,7 +53,7 @@ class WorkoutController
                 header('Location: ./app/view/workout/workouts.php');
             } else {
                 echo "Erro ao buscar os treinos.";
-                require '/fit-crud/index.php';
+                require '/phpeso/index.php';
             }
         }
     }
@@ -69,7 +69,7 @@ class WorkoutController
                 header('Location: ./app/view/workout/workouts.php');
             } else {
                 echo "Erro ao deletar treino.";
-                require '/fit-crud/index.php';
+                require '/phpeso/index.php';
             }
         }
     }

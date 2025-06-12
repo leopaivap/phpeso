@@ -29,7 +29,7 @@
       }
       ?>
 
-      <form class="register-form" action="/fit-crud/index.php?controller=user&action=insert" method="POST">
+      <form class="register-form" action="/phpeso/index.php?controller=user&action=insert" method="POST">
         <div class="userData" style="width: 100%;">
           <div class="row">
             <div class="col-md-6 mb-3">

@@ -23,7 +23,7 @@
                     exit;
                 } else {
                     echo "Erro ao cadastrar o exercício.";
-                    require '/fit-crud/index.php';
+                    require '/phpeso/index.php';
                 }
             }
         }
@@ -38,7 +38,7 @@
                     exit;
                 } else {
                     echo "Erro ao alterar o exercício.";
-                    require '/fit-crud/index.php';
+                    require '/phpeso/index.php';
                 }
             }
         }
@@ -51,7 +51,7 @@
                     header('Location: ./app/view/exercise/exercises.php');
                 } else {
                     echo "Erro ao buscar os exercícios.";
-                    require '/fit-crud/index.php';
+                    require '/phpeso/index.php';
                 }
             }
         }
@@ -66,7 +66,7 @@
                     header('Location: ./app/view/exercise/exercises.php');
                 } else {
                     echo "Erro ao deletar o exercício.";
-                    require '/fit-crud/index.php';
+                    require '/phpeso/index.php';
                 }
             }
         }

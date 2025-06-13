@@ -1,5 +1,7 @@
 <?php
-require_once '../../repository/Connection.php' ?>
+require_once '../../repository/Connection.php';
+require_once '../../repository/muscle-group/MuscleGroupRepository.php';
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -41,10 +43,8 @@ require_once '../../repository/Connection.php' ?>
   }
 
   // Carrega os grupos musculares
-  $muscleQuery = "SELECT id, name FROM muscle_groups ORDER BY name ASC";
-  $muscleStmt = $connection->prepare($muscleQuery);
-  $muscleStmt->execute();
-  $muscleGroups = $muscleStmt->fetchAll(PDO::FETCH_ASSOC);
+  $muscleGroupRepository = new MuscleGroupRepository();
+  $muscleGroups = $muscleGroupRepository->selectAll();
   ?>
   <div id="navbar"></div>
 

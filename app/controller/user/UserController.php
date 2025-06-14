@@ -1,6 +1,6 @@
 <?php
 
-require_once './app/service/user/UserService.php';
+require_once __DIR__ . '/../../service/user/UserService.php';
 
 class UserController
 {
@@ -45,25 +45,59 @@ class UserController
             }
         }
     }
-    public function selectAll(): void
+    public function selectAll(string $method): array | null
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $response = $this->userService->selectAll();
+        if ($method === 'GET') {
+            $users = $this->userService->selectAll();
 
             // TODO --> PAINEL ADM: Visualizar lista de usuários na Dashboard
-            if ($response) {
-                header('Location: /views/success.php');
+            if ($users) {
+                return $users;
             } else {
                 echo "Erro ao selecionar os usuários.";
+                return null;
             }
         }
+        return null;
+    }
+
+    public function findById(int $id, string $method): User | null
+    {
+        if ($method === 'GET') {
+            $user = $this->userService->findById($id);
+
+            if ($user) {
+                return $user;
+            } else {
+                echo "Erro ao selecionar usuário por ID.";
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public function selectAllByRole(string $role, string $method): array | null
+    {
+        if ($method === 'GET') {
+            $users = $this->userService->selectAllByRole($role);
+
+            if ($users) {
+                return $users;
+            } else if (empty($user)) {
+                echo "Erro ao selecionar os usuários por função.";
+                return [];
+            } else {
+                return null;
+            }
+        }
+        return null;
     }
 
     public function delete(int $id, string $method): void
     {
         if ($id === null || empty($id)) return;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if ($method === 'DELETE') {
             $response = $this->userService->delete($id);
 
             // TODO --> PAINEL ADM: Visualizar lista de usuários na Dashboard || Voltar para login se for usuário normal apagando a conta pessoal.

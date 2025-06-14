@@ -7,7 +7,10 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
   $id = $_GET['id'] ?? null;
-  $method = strtoupper($_GET['method']);
+  $method = "";
+  if (isset($_GET['method'])) {
+    $method = strtoupper($_GET['method']);
+  }
   $data = $_POST ?? [];
   $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -28,7 +31,7 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 
   switch ($action) {
     case 'select':
-      $controller->selectAll();
+      $controller->selectAll("GET");
       break;
     case 'insert':
       $controller->insert($data);

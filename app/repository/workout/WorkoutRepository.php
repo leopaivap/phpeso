@@ -1,7 +1,7 @@
 <?php
 
-require_once "./app/repository/Connection.php";
-require_once "./app/repository/RepositoryInterface.php";
+require_once __DIR__ . "/../../repository/Connection.php";
+require_once __DIR__ . "/../../repository/RepositoryInterface.php";
 
 date_default_timezone_set('America/Sao_Paulo');
 class WorkoutRepository implements RepositoryInterface
@@ -19,20 +19,32 @@ class WorkoutRepository implements RepositoryInterface
 
         try {
             $sql = "
-                INSERT INTO table_name 
-                (
-                    created_at
-                ) 
-                VALUES (
-
-                    :created_at
-                );
+                INSERT INTO workouts (
+                    name, 
+                    description, 
+                    student_id, 
+                    trainer_id,
+                    created_at,
+                    updated_at
+                ) VALUES (
+                    :name,
+                    :description,
+                    :student_id,
+                    :trainer_id,
+                    :created_at,
+                    :updated_at
+                )
             ";
 
             $stmt = $this->connection->prepare($sql);
 
             $stmt->execute([
-                ':created_at' => $entity->getCreatedAt()
+                ':name' => $entity->getName(),
+                ':description' => $entity->getDescription(),
+                ':student_id' => $entity->getStudentId(),
+                ':trainer_id' => $entity->getTrainerId(),
+                ':created_at' => $entity->getCreatedAt(),
+                ':updated_at' => $entity->getCreatedAt()
             ]);
 
             return true;
@@ -45,42 +57,84 @@ class WorkoutRepository implements RepositoryInterface
     public function update(int $id, object $entity): bool
     {
         try {
-            $sql = "";
+            $sql = "
+                UPDATE workouts SET
+                    name = :name,
+                    description = :description,
+                    student_id = :student_id,
+                    trainer_id = :trainer_id,
+                    updated_at = :updated_at
+                WHERE id = :id;
+            ";
 
             $stmt = $this->connection->prepare($sql);
 
             $stmt->execute([
-                "id" => $id
+                ":name" => $entity->getName(),
+                ":description" => $entity->getDescription(),
+                ":student_id" => $entity->getStudentId(),
+                ":trainer_id" => $entity->getTrainerId(),
+                ":updated_at" => $entity->getUpdatedAt(),
+                ":id" => $id
             ]);
+
+            return true;
         } catch (PDOException $e) {
             echo "Erro ao alterar dados do treino: " . $e->getMessage();
             return false;
         }
-        return false;
     }
     public function selectAll(): array
     {
-        $users = [];
+        $workouts = [];
         try {
-            $sql = "";
+            $sql = "
+                SELECT * FROM workouts;
+            ";
 
             $stmt = $this->connection->prepare($sql);
 
             $stmt->execute();
 
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $workouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $users;
+            return $workouts;
         } catch (PDOException $e) {
             echo "Erro ao buscar treinos: " . $e->getMessage();
             return [];
         }
     }
 
+    public function findById(int $id): array | null
+    {
+        try {
+            $sql = "
+                SELECT name, description, student_id, trainer_id FROM workouts WHERE id = :id;
+            ";
+
+            $stmt = $this->connection->prepare($sql);
+
+            $stmt->execute(
+                [
+                    ":id" => $id
+                ]
+            );
+
+            $workout = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $workout;
+        } catch (PDOException $e) {
+            echo "Erro ao buscar treino por ID: " . $e->getMessage();
+            return null;
+        }
+    }
+
     public function delete(int $id): bool
     {
         try {
-            $sql = "";
+            $sql = "
+                DELETE FROM workouts WHERE id = :id
+            ";
 
             $stmt = $this->connection->prepare($sql);
 

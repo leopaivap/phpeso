@@ -42,18 +42,19 @@
                 }
             }
         }
-        public function selectAll(): void
+        public function selectAll(string $method): array | null
         {
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if ($method === 'GET') {
                 $response = $this->exerciseService->selectAll();
 
                 if ($response) {
-                    header('Location: ./app/view/exercise/exercises.php');
+                    return $response;
                 } else {
                     echo "Erro ao buscar os exercícios.";
-                    require 'index.php';
+                    return null;
                 }
             }
+            return null;
         }
         public function delete(int $id, string $method): void
         {

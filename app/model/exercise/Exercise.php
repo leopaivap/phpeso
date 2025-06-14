@@ -3,8 +3,8 @@
 class Exercise
 {
     private string $name;
-    private string $exercise_type;
-    private int $muscle_group_id;
+    private string $exerciseType;
+    private int $muscleGroupId;
     private string $difficulty;
     private string $description;
     private string $createdAt;
@@ -26,22 +26,22 @@ class Exercise
 
     public function getExerciseType(): string
     {
-        return $this->exercise_type;
+        return $this->exerciseType;
     }
 
     public function setExerciseType(string $type): void
     {
-        $this->exercise_type = $type;
+        $this->exerciseType = $type;
     }
 
     public function getMuscleGroupId(): int
     {
-        return $this->muscle_group_id;
+        return $this->muscleGroupId;
     }
 
     public function setMuscleGroupId(int $id): void
     {
-        $this->muscle_group_id = $id;
+        $this->muscleGroupId = $id;
     }
 
     public function getDifficulty(): string

@@ -1,6 +1,45 @@
 <?php
 require_once '../../repository/Connection.php';
 require_once '../../repository/muscle-group/MuscleGroupRepository.php';
+
+$connection = Connection::getInstance()->getConnection();
+
+$id = $_GET['id'] ?? null;
+$editing = false;
+
+// Define os valores padrão do formulário
+$exercise = [
+  'name' => '',
+  'exercise_type' => '',
+  'description' => '',
+  'muscle_group_id' => '',
+  'difficulty' => 'beginner'
+];
+
+// Se estiver editando, busca os dados do exercício
+// ReqGet
+if ($id) {
+  $stmt = $connection->prepare("SELECT * FROM exercises WHERE id = :id");
+  $stmt->execute([':id' => $id]);
+  $exerciseData = $stmt->fetch(PDO::FETCH_ASSOC);
+  if ($exerciseData) {
+    $exercise = $exerciseData;
+    $editing = true;
+  }
+}
+
+// Carrega os grupos musculares
+// TODO REQUISIÇÃO GET PARA SELECT ALL CONTROLLER N VAI TER REDIRECT
+$muscleGroupRepository = new MuscleGroupRepository();
+$muscleGroups = $muscleGroupRepository->selectAll();
+
+// TODO REQUISIÇÃO GET PARA SELECT ALL VIA HTTP
+$connection = Connection::getInstance()->getConnection();
+$query = "SELECT * FROM exercises";
+$stmt = $connection->prepare($query);
+$stmt->execute();
+
+$exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -15,38 +54,6 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
 </head>
 
 <body>
-  <?php
-  $connection = Connection::getInstance()->getConnection();
-
-  $id = $_GET['id'] ?? null;
-  $editing = false;
-
-  // Define os valores padrão do formulário
-  $exercise = [
-    'name' => '',
-    'exercise_type' => '',
-    'description' => '',
-    'muscle_group_id' => '',
-    'difficulty' => 'beginner'
-  ];
-
-  // Se estiver editando, busca os dados do exercício
-  // ReqGet
-  if ($id) {
-    $stmt = $connection->prepare("SELECT * FROM exercises WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-    $exerciseData = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($exerciseData) {
-      $exercise = $exerciseData;
-      $editing = true;
-    }
-  }
-
-  // Carrega os grupos musculares
-  // TODO REQUISIÇÃO GET PARA SELECT ALL CONTROLLER N VAI TER REDIRECT
-  $muscleGroupRepository = new MuscleGroupRepository();
-  $muscleGroups = $muscleGroupRepository->selectAll();
-  ?>
   <div id="navbar"></div>
 
   <main class="container mt-5">
@@ -67,25 +74,25 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
     ?>
 
 
-    <form id="exerciseForm" class="row g-3" action=<?= $editing ? "/phpeso/index.php?controller=exercise&action=update&id=$id" : "/phpeso/index.php?controller=exercise&action=insert" ?> method="POST">
+    <form id="exerciseForm" class="register-form" action=<?= $editing ? "/phpeso/index.php?controller=exercise&action=update&id=$id" : "/phpeso/index.php?controller=exercise&action=insert" ?> method="POST">
 
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="exercise_name" class="form-label">Nome do Exercício:</label>
         <input type="text" class="form-control" id="exercise_name" name="exercise_name"
           value="<?= htmlspecialchars($exercise['name']) ?>" required>
       </div>
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="exercise_type" class="form-label">Tipo de Exercício:</label>
         <input type="text" class="form-control" id="exercise_type" name="exercise_type"
           value="<?= htmlspecialchars($exercise['exercise_type']) ?>" required>
       </div>
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="description" class="form-label">Descrição:</label>
         <input type="text" class="form-control" id="description" name="description"
           value="<?= htmlspecialchars($exercise['description']) ?>" required>
       </div>
 
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="muscle_group" class="form-label">Grupo Muscular:</label>
         <select name="muscle_group" id="muscle_group" class="form-control" required>
           <option value="">Selecione um grupo muscular</option>
@@ -97,8 +104,7 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
         </select>
       </div>
 
-
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="difficulty" class="form-label">Dificuldade</label>
         <select class="form-select" id="difficulty" name="difficulty">
           <option value="beginner" <?= $exercise['difficulty'] == 'beginner' ? 'selected' : '' ?>>Iniciante</option>
@@ -106,24 +112,12 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
           </option>
           <option value="advanced" <?= $exercise['difficulty'] == 'advanced' ? 'selected' : '' ?>>Avançado</option>
         </select>
+      </div>
 
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-dark"><?= $editing ? 'Salvar' : 'Cadastrar' ?></button>
-      </div>
+      <button type="submit" class="exercise-btn btn btn-dark"><?= $editing ? 'Salvar' : 'Cadastrar' ?></button>
     </form>
 
     <hr class="my-5" />
-
-    <?php
-    // TODO HTTP REQUEST
-    $connection = Connection::getInstance()->getConnection();
-    $query = "SELECT * FROM exercises";
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
-
-    $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    ?>
 
     <h3>Exercícios Cadastrados</h3>
 

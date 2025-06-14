@@ -114,9 +114,7 @@ class ExerciseRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         try {
-            $sql = "
-            DELETE FROM exercises AS e WHERE e.id = :id;
-            ";
+            $sql = "DELETE FROM exercises WHERE id = :id;";
 
             $stmt = $this->connection->prepare($sql);
 

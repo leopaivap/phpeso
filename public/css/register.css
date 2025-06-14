@@ -1,6 +1,12 @@
 .register-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  width: 100%;
+}
+
+.register-btn {
+  grid-column: -1/1 !important;
+  margin: auto;
+  width: 50% !important;
 }

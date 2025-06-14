@@ -38,7 +38,7 @@
                     exit;
                 } else {
                     echo "Erro ao alterar o exercício.";
-                    require '/phpeso/index.php';
+                    require 'index.php';
                 }
             }
         }
@@ -51,7 +51,7 @@
                     header('Location: ./app/view/exercise/exercises.php');
                 } else {
                     echo "Erro ao buscar os exercícios.";
-                    require '/phpeso/index.php';
+                    require 'index.php';
                 }
             }
         }

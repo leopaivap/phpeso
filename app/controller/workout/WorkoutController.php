@@ -1,6 +1,6 @@
 <?php
 
-require_once './app/service/workout/WorkoutService.php';
+require_once __DIR__ . '/../../service/workout/WorkoutService.php';
 
 class WorkoutController
 {
@@ -24,7 +24,7 @@ class WorkoutController
                 exit;
             } else {
                 echo "Erro ao cadastrar treino.";
-                require '/fit-crud/index.php';
+                require 'index.php';
             }
         }
     }
@@ -32,44 +32,59 @@ class WorkoutController
     {
         if ($data === null || empty($data) || $id === null || empty($id)) return;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->workoutService->update($id, $data);
 
             if ($response) {
                 header('Location: ./app/view/workout/workouts.php');
                 exit;
             } else {
-                echo "Erro ao alterar o usuário.";
-                require '/fit-crud/index.php';
+                echo "Erro ao alterar treino.";
+                require 'index.php';
             }
         }
     }
-    public function selectAll(): void
+    public function selectAll(string $method): array | null
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $response = $this->workoutService->selectAll();
+        if ($method === 'GET') {
+            $workouts = $this->workoutService->selectAll();
 
-            if ($response) {
-                header('Location: ./app/view/workout/workouts.php');
+            if ($workouts) {
+                return $workouts;
+            } else if (empty($workouts)) {
+                return [];
             } else {
                 echo "Erro ao buscar os treinos.";
-                require '/fit-crud/index.php';
+                return null;
             }
         }
+        return null;
     }
 
-    public function delete(int $id): void
+    public function findById($id, $method): array | null
+    {
+        if ($method === "GET") {
+            $workout = $this->workoutService->findById($id);
+            if ($workout) {
+                return $workout;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public function delete(int $id, string $method): void
     {
         if ($id === null || empty($id)) return;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if ($method === 'DELETE') {
             $response = $this->workoutService->delete($id);
 
             if ($response) {
                 header('Location: ./app/view/workout/workouts.php');
             } else {
                 echo "Erro ao deletar treino.";
-                require '/fit-crud/index.php';
+                require 'index.php';
             }
         }
     }

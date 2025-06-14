@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Cadastro - FitCrud</title>
+  <title>Cadastro - PhPeso</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="../../../public/css/style.css" />
@@ -29,7 +29,7 @@
       }
       ?>
 
-      <form class="register-form" action="/fit-crud/index.php?controller=user&action=insert" method="POST">
+      <form class="register-form" action="/phpeso/index.php?controller=user&action=insert" method="POST">
         <div class="userData" style="width: 100%;">
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -86,14 +86,14 @@
           <div class="mb-3">
             <label for="role" class="form-label">Tipo de Conta</label>
             <select class="form-select" id="role" name="role">
-              <option value="user">Cliente</option>
+              <option value="client">Cliente</option>
               <option value="trainer">Treinador</option>
               <option value="admin">Administrador</option>
             </select>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-dark w-100">Registrar</button>
+        <button type="submit" class="register-btn btn btn-dark w-100">Registrar</button>
       </form>
     </div>
   </main>

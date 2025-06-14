@@ -1,7 +1,7 @@
 <?php
 
-require_once "./app/repository/Connection.php";
-require_once "./app/repository/RepositoryInterface.php";
+require_once __DIR__ . "/../../repository/Connection.php";
+require_once __DIR__ . "/../../repository/RepositoryInterface.php";
 
 date_default_timezone_set('America/Sao_Paulo');
 class UserRepository implements RepositoryInterface
@@ -79,7 +79,7 @@ class UserRepository implements RepositoryInterface
                 u.gender      = :gender,
                 u.birth_date  = :birth_date,
                 u.username    = :username,
-                u.email       = :email,
+                u.email       = :email
                 WHERE u.id = :id;
             ";
 
@@ -126,6 +126,55 @@ class UserRepository implements RepositoryInterface
             return $users;
         } catch (PDOException $e) {
             echo "Erro ao buscar usuários: " . $e->getMessage();
+            return [];
+        }
+    }
+
+    public function findById(int $id): array | null
+    {
+        try {
+            $sql = "
+                SELECT id, firstName, lastName, username, email, phoneNumber, gender FROM users WHERE id = :id;
+            ";
+
+            $stmt = $this->connection->prepare($sql);
+
+            $stmt->execute([
+                ":id" => $id
+            ]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $userData;
+        } catch (PDOException $e) {
+            echo "Erro ao buscar usuário por ID: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function selectAllByRole(string $role): array
+    {
+        $users = [];
+        try {
+            $sql = "
+            SELECT 
+            u.id, 
+            u.username, 
+            u.firstName, 
+            u.lastName
+            FROM users AS u 
+            WHERE u.role = :role;";
+
+            $stmt = $this->connection->prepare($sql);
+
+            $stmt->execute([
+                ":role" => $role
+            ]);
+
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $users;
+        } catch (PDOException $e) {
+            echo "Erro ao buscar usuários por função: " . $e->getMessage();
             return [];
         }
     }

@@ -53,17 +53,22 @@ class ExerciseRepository implements RepositoryInterface
             return false;
         }
     }
+    /*
+    Erro ao alterar dados do exercício: SQLSTATE[HY093]: Invalid parameter number: parameter was not definedErro ao alterar o exercício.
+    Warning: require(/phpeso/index.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php on line 41
+    Fatal error: Uncaught Error: Failed opening required '/phpeso/index.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php:41 Stack trace: #0 C:\xampp\htdocs\phpeso\index.php(38): ExerciseController->update(7, Array) #1 {main} thrown in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php on line 41
+    */
     public function update(int $id, object $entity): bool
     {
         try {
             $sql = "
-            UPDATE exercises AS e SET
-            e.name = :name,
-            e.muscle_group_id = :muscle_group_id,
-            e.exercise_type = :type,
-            e.difficulty = :difficulty,
-            e.description = :description
-            WHERE e.id = :id
+            UPDATE exercises SET
+            name = :name,
+            muscle_group_id = :muscle_group_id,
+            exercise_type = :exercise_type,
+            difficulty = :difficulty,
+            description = :description
+            WHERE id = :id
             ";
             $stmt = $this->connection->prepare($sql);
             $stmt->execute([
@@ -109,9 +114,7 @@ class ExerciseRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         try {
-            $sql = "
-            DELETE FROM exercises AS e WHERE e.id = :id;
-            ";
+            $sql = "DELETE FROM exercises WHERE id = :id;";
 
             $stmt = $this->connection->prepare($sql);
 

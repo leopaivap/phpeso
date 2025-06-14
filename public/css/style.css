@@ -1,4 +1,4 @@
-@import url("/css/register.css");
+@import "./register.css";
 
 body {
   background-color: #fff;
@@ -34,4 +34,18 @@ main {
 
 footer {
   font-size: 0.9rem;
+}
+
+.register-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  width: 100%;
+}
+
+.workout-btn,
+.exercise-btn {
+  grid-column: -1/1 !important;
+  margin: auto !important;
+  width: 50% !important;
 }

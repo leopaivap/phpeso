@@ -1,18 +1,18 @@
 <?php
 
-require_once "./app/model/user/User.php";
-require_once "./app/service/ServiceInterface.php";
-require_once "./app/repository/user/UserRepository.php";
+require_once __DIR__ . "/../../model/user/User.php";
+require_once __DIR__ . "/../../service/ServiceInterface.php";
+require_once __DIR__ . "/../../repository/user/UserRepository.php";
 
-require_once "./app/exception/user/InvalidUserFirstNameException.php";
-require_once "./app/exception/user/InvalidUserLastNameException.php";
-require_once "./app/exception/user/InvalidUserEmailException.php";
-require_once "./app/exception/user/InvalidUserPasswordException.php";
-require_once "./app/exception/user/InvalidUserConfirmPassword.php";
-require_once "./app/exception/user/InvalidUserPhoneNumberException.php";
-require_once "./app/exception/user/InvalidUserBirthDateException.php";
-require_once "./app/exception/user/InvalidUserGenderException.php";
-require_once "./app/exception/user/InvalidUsernameException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserFirstNameException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserLastNameException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserEmailException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserPasswordException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserConfirmPassword.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserPhoneNumberException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserBirthDateException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUserGenderException.php";
+require_once __DIR__ . "/../../exception/user/InvalidUsernameException.php";
 
 class UserService implements ServiceInterface
 {
@@ -69,6 +69,33 @@ class UserService implements ServiceInterface
 
         if (!empty($response) && $response != null) {
             return $response;
+        }
+
+        return [];
+    }
+
+    public function findById(int $id): User | null
+    {
+        $userData = $this->userRepository->findById($id);
+
+        if (!empty($userData) && $userData != null) {
+
+            $user = new User();
+            // Settar os campos que for usar
+            $user->setFirstName($userData['firstName']);
+            $user->setLastName($userData['lastName']);
+            return $user;
+        }
+
+        return null;
+    }
+
+    public function selectAllByRole(string $role): array
+    {
+        $users = $this->userRepository->selectAllByRole($role);
+
+        if (!empty($users) && $users != null) {
+            return $users;
         }
 
         return [];

@@ -2,10 +2,10 @@
 
 require_once __DIR__ . "/../../exception/ValidationException.php";
 
-class InvalidUsernameException extends ValidationException
+class InvalidWorkoutTrainerException extends ValidationException
 {
     public function __construct()
     {
-        parent::__construct("Nome de usuário inválido.");
+        parent::__construct("Treinador inválido.");
     }
 }

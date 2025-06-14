@@ -1,8 +1,9 @@
 <?php
 // apenas para teste, futuramente tera cadastro de grupos musculares
-include_once "connection.php";
+require_once "../Connection.php";
 
 try {
+    $connection = Connection::getInstance()->getConnection();
     $stmt = $connection->query("SELECT COUNT(*) FROM muscle_groups");
     $count = $stmt->fetchColumn();
 

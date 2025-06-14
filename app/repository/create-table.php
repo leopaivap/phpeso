@@ -57,37 +57,37 @@ try {
     // echo "Tabela 'exercises' criada com sucesso (ou já existia).<br>";
 
     $sql = "
-        CREATE TABLE IF NOT EXISTS trainings (
+        CREATE TABLE workouts (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
-            user_id INT NOT NULL,
-            day_of_week ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
-            goal VARCHAR(255),
+            description TEXT,
+            student_id INT NOT NULL,
+            trainer_id INT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            );
+            FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (trainer_id) REFERENCES users(id)
+        );
     ";
     $connection->exec($sql);
-    //   echo "Tabela 'trainings' criada com sucesso (ou já existia).<br>";
+    //   echo "Tabela 'workouts' criada com sucesso (ou já existia).<br>";
 
     $sql = "
-        CREATE TABLE IF NOT EXISTS training_exercises (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            training_id INT NOT NULL,
-            exercise_id INT NOT NULL,
-            sets INT NOT NULL,
-            reps INT NOT NULL,
-            weight DECIMAL(10,2),
-            rest_time INT,
-            FOREIGN KEY (training_id) REFERENCES trainings(id) ON DELETE CASCADE,
-            FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
+            CREATE TABLE workout_exercises (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                workout_id INT NOT NULL,
+                exercise_id INT NOT NULL,
+                day_of_week ENUM( 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ) NOT NULL,
+                sets INT NOT NULL,
+                reps INT NOT NULL,
+                rest_time VARCHAR(20),
+                FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE,
+                FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE       
             );
     ";
     $connection->exec($sql);
-    // echo "Tabela 'training_exercises' criada com sucesso (ou já existia).<br>";
+    // echo "Tabela 'workout_exercises' criada com sucesso (ou já existia).<br>";
 
 } catch (PDOException $e) {
     // echo "Erro ao criar a tabela: " . $e->getMessage();
 }
-?>

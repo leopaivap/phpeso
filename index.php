@@ -6,7 +6,11 @@ require_once "./app/controller/workout/WorkoutController.php";
 if (isset($_GET['controller']) && isset($_GET['action'])) {
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
-
+  $id = $_GET['id'] ?? null;
+  $method = "";
+  if (isset($_GET['method'])) {
+    $method = strtoupper($_GET['method']);
+  }
   $data = $_POST ?? [];
   $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -27,16 +31,28 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 
   switch ($action) {
     case 'select':
-      $controller->selectAll();
+      $controller->selectAll("GET");
       break;
     case 'insert':
       $controller->insert($data);
       break;
     case 'update':
-      $controller->update($data['id'], $data);
+      if ($id != null && !empty($id)) {
+        $controller->update($id, $data);
+      } else {
+        echo "ID NÃO ENCONTRADO PARA ALTERAR";
+      }
       break;
     case 'delete':
-      $controller->delete($data['id'] ?? null);
+      if ($method === 'DELETE') {
+        if ($id != null && !empty($id)) {
+          $controller->delete($id, $method);
+        } else {
+          echo "ID NÃO ENCONTRADO PARA DELETAR";
+        }
+      } else {
+        echo "Método inválido para DELETAR";
+      }
       break;
     default:
       echo "Ação '$action' não encontrada no controlador '$controllerName'.";
@@ -53,9 +69,7 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhPeso - Home</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="./public/css/style.css" />
 </head>
 
@@ -72,10 +86,7 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
         </p>
       </div>
       <div class="col-md-6 text-center">
-        <img
-          src="./public/assets/home.jpg"
-          alt="Imagem academia"
-          class="img-fluid rounded" />
+        <img src="./public/assets/home.jpg" alt="Imagem academia" class="img-fluid rounded" />
       </div>
     </div>
 

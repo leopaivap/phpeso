@@ -65,7 +65,7 @@ class ExerciseRepository implements RepositoryInterface
             UPDATE exercises SET
             name = :name,
             muscle_group_id = :muscle_group_id,
-            exercise_type = :type,
+            exercise_type = :exercise_type,
             difficulty = :difficulty,
             description = :description
             WHERE id = :id

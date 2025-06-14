@@ -6,6 +6,7 @@ require_once "./app/controller/workout/WorkoutController.php";
 if (isset($_GET['controller']) && isset($_GET['action'])) {
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
+  $id = $_GET['id'] ?? null;
   $data = $_POST ?? [];
   $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -32,16 +33,14 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
       $controller->insert($data);
       break;
     case 'update':
-      if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+      if ($id != null && !empty($id)) {
         $controller->update($id, $data);
       } else {
         echo "ID NÃO ENCONTRADO PARA ALTERAR";
       }
       break;
     case 'delete':
-      if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+      if ($id != null && !empty($id)) {
         $controller->delete($id);
       } else {
         echo "ID NÃO ENCONTRADO PARA DELETAR";

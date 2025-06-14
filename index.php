@@ -7,6 +7,7 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
   $id = $_GET['id'] ?? null;
+  $method = strtoupper($_GET['method']);
   $data = $_POST ?? [];
   $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -40,10 +41,14 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
       }
       break;
     case 'delete':
-      if ($id != null && !empty($id)) {
-        $controller->delete($id);
+      if ($method === 'DELETE') {
+        if ($id != null && !empty($id)) {
+          $controller->delete($id, $method);
+        } else {
+          echo "ID NÃO ENCONTRADO PARA DELETAR";
+        }
       } else {
-        echo "ID NÃO ENCONTRADO PARA DELETAR";
+        echo "Método inválido para DELETAR";
       }
       break;
     default:

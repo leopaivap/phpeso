@@ -55,18 +55,18 @@
                 }
             }
         }
-        public function delete(int $id): void
+        public function delete(int $id, string $method): void
         {
             if ($id === null || empty($id)) return;
 
-            if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            if ($method === 'DELETE') {
                 $response = $this->exerciseService->delete($id);
 
                 if ($response) {
                     header('Location: ./app/view/exercise/exercises.php');
                 } else {
                     echo "Erro ao deletar o exercício.";
-                    require '/phpeso/index.php';
+                    require 'index.php';
                 }
             }
         }

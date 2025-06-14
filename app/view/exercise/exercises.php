@@ -43,11 +43,11 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
   }
 
   // Carrega os grupos musculares
+  // TODO REQUISIÇÃO GET PARA SELECT ALL CONTROLLER N VAI TER REDIRECT
   $muscleGroupRepository = new MuscleGroupRepository();
   $muscleGroups = $muscleGroupRepository->selectAll();
   ?>
   <div id="navbar"></div>
-
 
   <main class="container mt-5">
     <h2 class="mb-4">
@@ -163,8 +163,7 @@ require_once '../../repository/muscle-group/MuscleGroupRepository.php';
             }
             echo "<td>" . htmlspecialchars($difficultyText) . "</td>";
             echo "<td>" . htmlspecialchars($exercise['description']) . "</td>";
-            // TODO --> CORRIGIR O EXCLUIR E O ALTERAR
-            echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href=''>Excluir</a></td>";
+            echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href='/phpeso/index.php?controller=exercise&action=delete&method=delete&id=" . $exercise['id'] . "'>Excluir</a></td>";
             echo "</tr>";
           }
         } else {

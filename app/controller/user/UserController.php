@@ -59,7 +59,7 @@ class UserController
         }
     }
 
-    public function delete(int $id): void
+    public function delete(int $id, string $method): void
     {
         if ($id === null || empty($id)) return;
 

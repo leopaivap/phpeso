@@ -1,20 +1,24 @@
 <?php
 
 require_once __DIR__ . '/../../service/workout/WorkoutService.php';
+require_once __DIR__ . '/../BaseController.php';
 
-class WorkoutController
+class WorkoutController extends BaseController
 {
 
     private WorkoutService $workoutService;
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->workoutService = new WorkoutService();
     }
 
     public function insert(array $data): void
     {
-        if ($data === null || empty($data)) return;
+        if ($data === null || empty($data))
+            return;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->workoutService->insert($data);
@@ -30,7 +34,8 @@ class WorkoutController
     }
     public function update(int $id, array $data): void
     {
-        if ($data === null || empty($data) || $id === null || empty($id)) return;
+        if ($data === null || empty($data) || $id === null || empty($id))
+            return;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->workoutService->update($id, $data);
@@ -44,7 +49,7 @@ class WorkoutController
             }
         }
     }
-    public function selectAll(string $method): array | null
+    public function selectAll(string $method): array|null
     {
         if ($method === 'GET') {
             $workouts = $this->workoutService->selectAll();
@@ -61,7 +66,7 @@ class WorkoutController
         return null;
     }
 
-    public function findById($id, $method): array | null
+    public function findById($id, $method): array|null
     {
         if ($method === "GET") {
             $workout = $this->workoutService->findById($id);
@@ -75,7 +80,8 @@ class WorkoutController
 
     public function delete(int $id, string $method): void
     {
-        if ($id === null || empty($id)) return;
+        if ($id === null || empty($id))
+            return;
 
         if ($method === 'DELETE') {
             $response = $this->workoutService->delete($id);

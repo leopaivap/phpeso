@@ -1,18 +1,17 @@
 <?php
-require_once "./app/controller/user/UserController.php";
-require_once "./app/controller/exercise/ExerciseController.php";
-require_once "./app/controller/workout/WorkoutController.php";
 
 if (isset($_GET['controller']) && isset($_GET['action'])) {
+  require_once "./app/controller/user/UserController.php";
+  require_once "./app/controller/exercise/ExerciseController.php";
+  require_once "./app/controller/workout/WorkoutController.php";
+
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
   $id = $_GET['id'] ?? null;
-  $method = "";
-  if (isset($_GET['method'])) {
-    $method = strtoupper($_GET['method']);
-  }
-  $data = $_POST ?? [];
-  $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+  $method = $_SERVER['REQUEST_METHOD'];
+
+  // Sanitiza os dados do POST
+  $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS) ?? [];
 
   switch ($controllerName) {
     case 'user':
@@ -25,92 +24,26 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
       $controller = new WorkoutController();
       break;
     default:
-      echo "Controlador '$controllerName' não encontrado.";
+      http_response_code(404);
+      echo "Controlador não encontrado.";
       exit;
   }
 
-  switch ($action) {
-    case 'select':
-      $controller->selectAll("GET");
-      break;
-    case 'insert':
-      $controller->insert($data);
-      break;
-    case 'update':
-      if ($id != null && !empty($id)) {
-        $controller->update($id, $data);
-      } else {
-        echo "ID NÃO ENCONTRADO PARA ALTERAR";
-      }
-      break;
-    case 'delete':
-      if ($method === 'DELETE') {
-        if ($id != null && !empty($id)) {
-          $controller->delete($id, $method);
-        } else {
-          echo "ID NÃO ENCONTRADO PARA DELETAR";
-        }
-      } else {
-        echo "Método inválido para DELETAR";
-      }
-      break;
-    default:
-      echo "Ação '$action' não encontrada no controlador '$controllerName'.";
+  // Chama a ação correspondente no controller
+  if (method_exists($controller, $action)) {
+    if ($id) {
+      $controller->$action($id, $data);
+    } else {
+      $controller->$action($data);
+    }
+  } else {
+    http_response_code(404);
+    echo "Ação '$action' não encontrada.";
   }
 
   exit;
 }
+
+require_once './app/view/home.php';
+
 ?>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PhPeso - Home</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="./public/css/style.css" />
-</head>
-
-<body class="bg-white text-dark">
-  <div id="navbar"></div>
-
-  <main class="container mt-5">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <h1 class="display-4 text-orange">PhPeso</h1>
-        <p class="lead">
-          Gerencie seus treinos de academia com facilidade! Visualize,
-          adicione e acompanhe seus treinos e exercícios de forma simples.
-        </p>
-      </div>
-      <div class="col-md-6 text-center">
-        <img src="./public/assets/home.jpg" alt="Imagem academia" class="img-fluid rounded" />
-      </div>
-    </div>
-
-    <section class="mt-5">
-      <h2 class="h4">Treinos Recentes</h2>
-      <ul class="list-group mt-3">
-        <li class="list-group-item">
-          <a href="#" class="text-decoration-none text-dark">Treino Peito - 10/04/2025</a>
-        </li>
-        <li class="list-group-item">
-          <a href="#" class="text-decoration-none text-dark">Treino Pernas - 08/04/2025</a>
-        </li>
-        <li class="list-group-item">
-          <a href="#" class="text-decoration-none text-dark">Treino Costas - 05/04/2025</a>
-        </li>
-      </ul>
-    </section>
-  </main>
-
-  <div id="footer"></div>
-
-  <script src="./public/js/navbar.js"></script>
-  <script src="./public/js/footer.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>

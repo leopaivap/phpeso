@@ -1,6 +1,6 @@
 <?php
 // apenas para teste, futuramente tera cadastro de grupos musculares
-require_once "../Connection.php";
+require_once __DIR__ . "/../Connection.php";
 
 try {
     $connection = Connection::getInstance()->getConnection();

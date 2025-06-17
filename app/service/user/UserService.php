@@ -31,7 +31,8 @@ class UserService implements ServiceInterface
             $response = $this->userRepository->insert($user);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -45,7 +46,8 @@ class UserService implements ServiceInterface
             $response = $this->userRepository->update($id, $user);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -58,7 +60,8 @@ class UserService implements ServiceInterface
             $response = $this->userRepository->delete($id);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -74,7 +77,7 @@ class UserService implements ServiceInterface
         return [];
     }
 
-    public function findById(int $id): User | null
+    public function findById(int $id): User|null
     {
         $userData = $this->userRepository->findById($id);
 
@@ -101,7 +104,7 @@ class UserService implements ServiceInterface
         return [];
     }
 
-    private function createUser(array $data): User | null
+    private function createUser(array $data): User|null
     {
         $isValidUserData = $this->validateUserData($data);
 
@@ -115,7 +118,7 @@ class UserService implements ServiceInterface
             $user->setBirthDate($data['birth_date']);
             $user->setUsername($data['username']);
             $user->setEmail($data['email']);
-            $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
+            $user->setPassword($data['password']);
             $user->setRole($data['role']);
             $user->setCreatedAt(date('Y-m-d H:i:s'));
 
@@ -126,7 +129,6 @@ class UserService implements ServiceInterface
     }
 
     private function validateUserData(array $data): bool
-
     {
         $errors = [];
         if (empty($data['firstName']) || strlen(trim($data['firstName'])) < 3 || strlen(trim($data['firstName'])) > 50) {

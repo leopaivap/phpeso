@@ -6,19 +6,19 @@
   <title>Cadastro - PhPeso</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="../../../public/css/style.css" />
   <link rel="stylesheet" type="text/css" href="../../../public/css/register.css" />
 </head>
 
 <body>
-  <div id="navbar"></div>
+  <?php include_once __DIR__ . '/../templates/navbar.php'; ?>
 
   <main class="container d-flex align-items-center justify-content-center" style="min-height: 80vh">
     <div class="w-100">
       <h2 class="mb-4 text-center">Criar Conta</h2>
 
       <?php
-      session_start();
       if (isset($_SESSION['errors']) && is_array($_SESSION['errors'])) {
         echo '<div class="alert alert-danger" role="alert"><ul>';
         foreach ($_SESSION['errors'] as $error) {
@@ -76,11 +76,24 @@
 
           <div class="mb-3">
             <label for="password" class="form-label">Senha</label>
-            <input type="password" class="form-control" id="password" name="password" required />
+            <div class="input-group">
+              <input type="password" class="form-control password-input-register" id="password" name="password"
+                required />
+              <span class="input-group-text toggle-password-register" style="cursor: pointer;">
+                <i class="fas fa-eye password-icon-register"></i>
+              </span>
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+            <div class="input-group">
+              <input type="password" class="form-control password-input-register" id="confirmPassword"
+                name="confirmPassword" required />
+              <span class="input-group-text toggle-password-register" style="cursor: pointer;">
+                <i class="fas fa-eye password-icon-register"></i>
+              </span>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -98,10 +111,8 @@
     </div>
   </main>
 
-  <div id="footer"></div>
+  <?php include_once __DIR__ . '/../templates/footer.php'; ?>
 
-  <script src="../../../public/js/navbar.js"></script>
-  <script src="../../../public/js/footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../../public/js/login_register.js"></script>
   <script src="../../../public/js/register-validator.js"></script>

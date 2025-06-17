@@ -1,13 +1,7 @@
 <?php
-require_once '../../repository/Connection.php';
-require_once '../../repository/muscle-group/MuscleGroupRepository.php';
-
-$connection = Connection::getInstance()->getConnection();
 
 $id = $_GET['id'] ?? null;
 $editing = false;
-
-// Define os valores padrão do formulário
 $exercise = [
   'name' => '',
   'exercise_type' => '',
@@ -16,9 +10,8 @@ $exercise = [
   'difficulty' => 'beginner'
 ];
 
-// Se estiver editando, busca os dados do exercício
-// ReqGet
 if ($id) {
+  $connection = Connection::getInstance()->getConnection(); // Temporário para edição
   $stmt = $connection->prepare("SELECT * FROM exercises WHERE id = :id");
   $stmt->execute([':id' => $id]);
   $exerciseData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,21 +20,7 @@ if ($id) {
     $editing = true;
   }
 }
-
-// Carrega os grupos musculares
-// TODO REQUISIÇÃO GET PARA SELECT ALL CONTROLLER N VAI TER REDIRECT
-$muscleGroupRepository = new MuscleGroupRepository();
-$muscleGroups = $muscleGroupRepository->selectAll();
-
-// TODO REQUISIÇÃO GET PARA SELECT ALL VIA HTTP
-$connection = Connection::getInstance()->getConnection();
-$query = "SELECT * FROM exercises";
-$stmt = $connection->prepare($query);
-$stmt->execute();
-
-$exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -54,25 +33,14 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-  <div id="navbar"></div>
+  <?php if (session_status() === PHP_SESSION_NONE)
+    session_start(); ?>
+  <?php include_once __DIR__ . '/../templates/navbar.php'; ?>
 
   <main class="container mt-5">
     <h2 class="mb-4">
       <?= $editing ? 'Editando exercício "' . htmlspecialchars($exercise['name']) . '"' : "Cadastrar Exercício" ?>
     </h2>
-
-    <?php
-    session_start();
-    if (isset($_SESSION['errors']) && is_array($_SESSION['errors'])) {
-      echo '<div class="alert alert-danger" role="alert"><ul>';
-      foreach ($_SESSION['errors'] as $error) {
-        echo '<li>' . htmlspecialchars($error) . '</li>';
-      }
-      echo '</ul></div>';
-      unset($_SESSION['errors']);
-    }
-    ?>
-
 
     <form id="exerciseForm" class="register-form" action=<?= $editing ? "/phpeso/index.php?controller=exercise&action=update&id=$id" : "/phpeso/index.php?controller=exercise&action=insert" ?> method="POST">
 
@@ -134,30 +102,32 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </thead>
       <tbody>
         <?php
-        // Verifica se existem exercícios cadastrados
         if ($exercises) {
-          foreach ($exercises as $exercise) {
-            // Para cada exercício, exibe os dados
+          foreach ($exercises as $exercise_item) {
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($exercise['name']) . "</td>";
-            echo "<td>" . htmlspecialchars($exercise['exercise_type']) . "</td>";
+            echo "<td>" . htmlspecialchars($exercise_item['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($exercise_item['exercise_type']) . "</td>";
 
-            // Carrega o nome do grupo muscular
-            $muscleGroupQuery = "SELECT name FROM muscle_groups WHERE id = :muscle_group_id";
-            $muscleStmt = $connection->prepare($muscleGroupQuery);
-            $muscleStmt->execute([':muscle_group_id' => $exercise['muscle_group_id']]);
-            $muscleGroup = $muscleStmt->fetch(PDO::FETCH_ASSOC);
-            echo "<td>" . htmlspecialchars($muscleGroup['name']) . "</td>";
-            if ($exercise['difficulty'] == "beginner") {
+            // Acha o nome do grupo muscular correspondente
+            $muscleGroupName = 'Não encontrado';
+            foreach ($muscleGroups as $group) {
+              if ($group['id'] == $exercise_item['muscle_group_id']) {
+                $muscleGroupName = $group['name'];
+                break;
+              }
+            }
+            echo "<td>" . htmlspecialchars($muscleGroupName) . "</td>";
+
+            if ($exercise_item['difficulty'] == "beginner") {
               $difficultyText = "Iniciante";
-            } elseif ($exercise['difficulty'] == "intermediate") {
+            } elseif ($exercise_item['difficulty'] == "intermediate") {
               $difficultyText = "Intermediário";
             } else {
               $difficultyText = "Avançado";
             }
             echo "<td>" . htmlspecialchars($difficultyText) . "</td>";
-            echo "<td>" . htmlspecialchars($exercise['description']) . "</td>";
-            echo "<td><a href='exercises.php?id=" . $exercise['id'] . "'>Editar</a> | <a href='/phpeso/index.php?controller=exercise&action=delete&method=delete&id=" . $exercise['id'] . "'>Excluir</a></td>";
+            echo "<td>" . htmlspecialchars($exercise_item['description']) . "</td>";
+            echo "<td><a href='/phpeso/index.php?controller=exercise&action=list&id=" . $exercise_item['id'] . "'>Editar</a> | <a href='/phpeso/index.php?controller=exercise&action=delete&method=delete&id=" . $exercise_item['id'] . "'>Excluir</a></td>";
             echo "</tr>";
           }
         } else {
@@ -168,10 +138,9 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
   </main>
 
-  <div id="footer"></div>
-  <script src="../../../public/js/navbar.js"></script>
+  <?php include_once __DIR__ . '/../templates/footer.php'; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../../public/js/footer.js"></script>
   <script src="../../../public/js/exercise-validator.js"></script>
 
 </body>

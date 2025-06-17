@@ -14,7 +14,8 @@ class UserController
 
     public function insert(array $data): void
     {
-        if ($data === null || empty($data)) return;
+        if ($data === null || empty($data))
+            return;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->userService->insert($data);
@@ -29,7 +30,8 @@ class UserController
     }
     public function update(int $id, array $data): void
     {
-        if ($data === null || empty($data) || $id === null || empty($id)) return;
+        if ($data === null || empty($data) || $id === null || empty($id))
+            return;
 
         // TODO --> CRIAR TELA DE ALTERAR PERFIL PARA REDIRECT DE SUCESSO E DE FALHA
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
@@ -45,7 +47,7 @@ class UserController
             }
         }
     }
-    public function selectAll(string $method): array | null
+    public function selectAll(string $method): array|null
     {
         if ($method === 'GET') {
             $users = $this->userService->selectAll();
@@ -61,7 +63,7 @@ class UserController
         return null;
     }
 
-    public function findById(int $id, string $method): User | null
+    public function findById(int $id, string $method): User|null
     {
         if ($method === 'GET') {
             $user = $this->userService->findById($id);
@@ -76,7 +78,7 @@ class UserController
         return null;
     }
 
-    public function selectAllByRole(string $role, string $method): array | null
+    public function selectAllByRole(string $role, string $method): array|null
     {
         if ($method === 'GET') {
             $users = $this->userService->selectAllByRole($role);
@@ -95,7 +97,8 @@ class UserController
 
     public function delete(int $id, string $method): void
     {
-        if ($id === null || empty($id)) return;
+        if ($id === null || empty($id))
+            return;
 
         if ($method === 'DELETE') {
             $response = $this->userService->delete($id);
@@ -108,4 +111,49 @@ class UserController
             }
         }
     }
+
+    public function login(array $data): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+            return;
+        if (session_status() === PHP_SESSION_NONE)
+            session_start();
+
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
+
+        // Busca o usuário no repositório
+        require_once __DIR__ . "/../../repository/user/UserRepository.php";
+        $userRepository = new UserRepository();
+        $user = $userRepository->findByUsername($username);
+
+        if ($user && password_verify($password, $user['password'])) {
+            // Login bem-sucedido: armazena dados na sessão
+            $_SESSION['user_loggedin'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_username'] = $user['username'];
+            $_SESSION['user_firstname'] = $user['firstName'];
+
+            header("Location: /phpeso/index.php");
+            exit;
+        } else {
+            $_SESSION['login_error'] = "Usuário ou senha inválidos.";
+            header("Location: /phpeso/app/view/user/login.php");
+            exit;
+        }
+    }
+
+    public function logout(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $_SESSION = array();
+        session_destroy();
+
+        header("Location: /phpeso/app/view/user/login.php");
+        exit;
+    }
+
 }

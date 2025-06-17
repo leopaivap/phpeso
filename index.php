@@ -8,11 +8,12 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
   $id = $_GET['id'] ?? null;
-  $method = $_SERVER['REQUEST_METHOD'];
+
+  // Pegando o método do GET para o delete
+  $method = $_GET['method'] ?? $_SERVER['REQUEST_METHOD'];
 
   // Sanitiza os dados do POST
   $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS) ?? [];
-
   switch ($controllerName) {
     case 'user':
       $controller = new UserController();
@@ -32,7 +33,7 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
   // Chama a ação correspondente no controller
   if (method_exists($controller, $action)) {
     if ($id) {
-      $controller->$action($id, $data);
+      $controller->$action($id, $data, $method);
     } else {
       $controller->$action($data);
     }
@@ -45,5 +46,3 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 }
 
 require_once './app/view/home.php';
-
-?>

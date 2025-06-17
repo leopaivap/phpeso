@@ -2,6 +2,7 @@
 
 require_once './app/service/exercise/ExerciseService.php';
 require_once __DIR__ . '/../BaseController.php';
+require_once __DIR__ . '/../../repository/muscle-group/MuscleGroupRepository.php';
 
 class ExerciseController extends BaseController
 {
@@ -17,7 +18,26 @@ class ExerciseController extends BaseController
 
     public function list(): void
     {
+    
         $exercises = $this->exerciseService->selectAll();
+
+        $muscleGroupRepository = new MuscleGroupRepository();
+        $muscleGroups = $muscleGroupRepository->selectAll();
+
+        $editing = false;
+        $exercise_form_data = [
+            'name' => '',
+            'exercise_type' => '',
+            'description' => '',
+            'muscle_group_id' => '',
+            'difficulty' => 'beginner'
+        ];
+
+        if (isset($_GET['id']) && !empty($_GET['id'])) {
+            $id = $_GET['id'];
+            $editing = true;
+        }
+
         require_once __DIR__ . '/../../view/exercise/exercises.php';
     }
 
@@ -67,21 +87,23 @@ class ExerciseController extends BaseController
         }
         return null;
     }
-    public function delete(int $id, string $method): void
+    public function delete(int $id, array $data, string $method): void
     {
         if ($id === null || empty($id))
             return;
 
-        if ($method === 'DELETE') {
+        if ($method === 'delete') { // 'delete' vindo da URL
             $response = $this->exerciseService->delete($id);
 
             if ($response) {
                 header('Location: /phpeso/index.php?controller=exercise&action=list');
                 exit;
             } else {
-                echo "Erro ao deletar o exercício.";
+                echo "Erro ao deletar o item.";
                 require 'index.php';
             }
         }
     }
+
+
 }

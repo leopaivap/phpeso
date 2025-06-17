@@ -92,10 +92,11 @@ class ExerciseRepository implements RepositoryInterface
         try {
             $sql = "
             SELECT
-            e.name
-            e.muscle_group_id
-            e.exercise_type
-            e.difficulty
+            e.id,
+            e.name,
+            e.muscle_group_id,
+            e.exercise_type,
+            e.difficulty,
             e.description
             FROM exercises AS e;
             ";
@@ -104,6 +105,7 @@ class ExerciseRepository implements RepositoryInterface
 
             $stmt->execute();
 
+            $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $exercises;
         } catch (PDOException $e) {
             echo "Erro ao buscar exercícios: " . $e->getMessage();

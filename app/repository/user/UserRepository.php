@@ -130,7 +130,7 @@ class UserRepository implements RepositoryInterface
         }
     }
 
-    public function findById(int $id): array | null
+    public function findById(int $id): array|null
     {
         try {
             $sql = "
@@ -194,6 +194,20 @@ class UserRepository implements RepositoryInterface
         } catch (PDOException $e) {
             echo "Erro ao deletar usuário: " . $e->getMessage();
             return false;
+        }
+    }
+
+    public function findByUsername(string $username): array|null
+    {
+        try {
+            $sql = "SELECT id, username, password, role, firstName FROM users WHERE username = :username";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute([":username" => $username]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $userData ?: null;
+        } catch (PDOException $e) {
+            echo "Erro ao buscar usuário por username: " . $e->getMessage();
+            return null;
         }
     }
 }

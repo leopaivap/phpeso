@@ -105,11 +105,11 @@ class WorkoutRepository implements RepositoryInterface
         }
     }
 
-    public function findById(int $id): array | null
+    public function findById(int $id): array|null
     {
         try {
             $sql = "
-                SELECT name, description, student_id, trainer_id FROM workouts WHERE id = :id;
+                SELECT id, name, description, student_id, trainer_id FROM workouts WHERE id = :id;
             ";
 
             $stmt = $this->connection->prepare($sql);

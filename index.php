@@ -1,5 +1,4 @@
 <?php
-
 if (isset($_GET['controller']) && isset($_GET['action'])) {
   require_once "./app/controller/user/UserController.php";
   require_once "./app/controller/exercise/ExerciseController.php";

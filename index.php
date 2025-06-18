@@ -45,3 +45,4 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 }
 
 require_once './app/view/home.php';
+?>

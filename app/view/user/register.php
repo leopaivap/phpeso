@@ -13,7 +13,6 @@
 
 <body>
   <?php include_once __DIR__ . '/../templates/navbar.php'; ?>
-
   <main class="container d-flex align-items-center justify-content-center" style="min-height: 80vh">
     <div class="w-100">
       <h2 class="mb-4 text-center">Criar Conta</h2>
@@ -112,7 +111,6 @@
   </main>
 
   <?php include_once __DIR__ . '/../templates/footer.php'; ?>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../../public/js/login_register.js"></script>
   <script src="../../../public/js/register-validator.js"></script>

@@ -1,18 +1,13 @@
 <?php
-$server = 'localhost';
-$user = 'root';
-$password = '';
+require_once __DIR__ . "/../../repository/Connection.php";
 
 try {
-    $dsn = "mysql:host=$server;charset=utf8";
-    $connection = new PDO($dsn, $user, $password);
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $db_config = Connection::getInstance()->getDatabaseConfig();
+  $dsn = "mysql:host={$db_config['db_server']};charset=utf8";
+  $connection = new PDO($dsn, $db_config['db_user'], $db_config['db_password'], $db_config['db_options']);
 
-    $sql = "CREATE DATABASE IF NOT EXISTS db_phpeso";
-    $connection->exec($sql);
-
-  //  echo "Banco de dados 'db_phpeso' criado com sucesso (ou já existia).";
+  $sql = "CREATE DATABASE IF NOT EXISTS db_phpeso";
+  $connection->exec($sql);
 } catch (PDOException $e) {
-    //echo "Erro ao criar o banco de dados: " . $e->getMessage();
 }
 ?>

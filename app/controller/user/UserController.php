@@ -73,7 +73,7 @@ class UserController
         return null;
     }
 
-    public function findById(int $id, string $method): User|null
+    public function findById(int $id, string $method): ?User
     {
         if ($method === 'GET') {
             $user = $this->userService->findById($id);

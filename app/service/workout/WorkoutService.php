@@ -25,7 +25,8 @@ class WorkoutService implements ServiceInterface
             $response = $this->workoutRepository->insert($workout);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -40,7 +41,8 @@ class WorkoutService implements ServiceInterface
             $response = $this->workoutRepository->update($id, $workout);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -53,7 +55,8 @@ class WorkoutService implements ServiceInterface
             $response = $this->workoutRepository->delete($id);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -69,7 +72,7 @@ class WorkoutService implements ServiceInterface
         return [];
     }
 
-    public function findById(int $id): array | null
+    public function findById(int $id): ?array
     {
         $workoutData = $this->workoutRepository->findById($id);
         if (!empty($workoutData) && $workoutData != null) {
@@ -79,7 +82,7 @@ class WorkoutService implements ServiceInterface
         return null;
     }
 
-    private function createWorkout(array $data): Workout | null
+    private function createWorkout(array $data): Workout|null
     {
         $isValidWorkoutData = $this->validateWorkoutData($data);
 
@@ -98,7 +101,6 @@ class WorkoutService implements ServiceInterface
     }
 
     private function validateWorkoutData(array $data): bool
-
     {
         $errors = [];
         if (empty($data['name']) || strlen(trim($data['name'])) < 5 || strlen(trim($data['name'])) > 30) {

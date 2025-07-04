@@ -97,7 +97,7 @@ class WorkoutController extends BaseController
         return null;
     }
 
-    public function findById($id, $method): array|null
+    public function findById($id, $method): ?array
     {
         if ($method === "GET") {
             $workout = $this->workoutService->findById($id);

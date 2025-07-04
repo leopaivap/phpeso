@@ -8,5 +8,5 @@ RUN apt-get update && apt-get install -y default-mysql-client libpq-dev \
 COPY setup.sh /setup.sh
 RUN chmod +x /setup.sh
 
-
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 ENTRYPOINT ["/setup.sh"]

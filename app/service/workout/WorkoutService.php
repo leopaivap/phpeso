@@ -82,7 +82,7 @@ class WorkoutService implements ServiceInterface
         return null;
     }
 
-    private function createWorkout(array $data): Workout|null
+    private function createWorkout(array $data): ?Workout
     {
         $isValidWorkoutData = $this->validateWorkoutData($data);
 

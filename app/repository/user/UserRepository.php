@@ -130,7 +130,7 @@ class UserRepository implements RepositoryInterface
         }
     }
 
-    public function findById(int $id): array|null
+    public function findById(int $id): ?array
     {
         try {
             $sql = "
@@ -197,7 +197,7 @@ class UserRepository implements RepositoryInterface
         }
     }
 
-    public function findByUsername(string $username): array|null
+    public function findByUsername(string $username): ?array
     {
         try {
             $sql = "SELECT id, username, password, role, firstName FROM users WHERE username = :username";

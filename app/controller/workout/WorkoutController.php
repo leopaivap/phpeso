@@ -70,7 +70,7 @@ class WorkoutController extends BaseController
         }
     }
 
-    public function selectAll(string $method): array|null
+    public function selectAll(string $method): ?array
     {
         if ($method === 'GET') {
             $workouts = $this->workoutService->selectAll();

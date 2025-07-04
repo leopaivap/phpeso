@@ -26,7 +26,8 @@ class ExerciseService implements ServiceInterface
             $response = $this->exerciseRepository->insert($exercise);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -40,7 +41,8 @@ class ExerciseService implements ServiceInterface
             $response = $this->exerciseRepository->update($id, $exercise);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -53,7 +55,8 @@ class ExerciseService implements ServiceInterface
             $response = $this->exerciseRepository->delete($id);
         }
 
-        if ($response) return true;
+        if ($response)
+            return true;
 
         return false;
     }
@@ -69,7 +72,7 @@ class ExerciseService implements ServiceInterface
         return [];
     }
 
-    private function createExercise(array $data): Exercise | null
+    private function createExercise(array $data): ?Exercise
     {
         $isValidExerciseData = $this->validateExerciseData($data);
 
@@ -89,7 +92,6 @@ class ExerciseService implements ServiceInterface
     }
 
     private function validateExerciseData(array $data): bool
-
     {
         $errors = [];
         if (empty($data['exercise_name']) || strlen(trim($data['exercise_name'])) < 5 || strlen(trim($data['exercise_name'])) > 30) {

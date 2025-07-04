@@ -9,7 +9,7 @@ class Connection
    function getDatabaseConfig()
    {
       return [
-         'db_server' => getenv('DB_SERVER') ?? 'mysql' ?? 'localhost',
+         'db_server' => getenv('DB_SERVER') !== false ? getenv('DB_SERVER') : 'mysql',
          'db_name' => getenv('DB_NAME') ?: 'db_phpeso',
          'db_user' => getenv('DB_USER') ?: 'root',
          'db_password' => getenv('DB_PASSWORD') ?: '',

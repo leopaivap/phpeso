@@ -1,13 +1,15 @@
 # Usa a imagem base oficial do PHP 7.4 com Apache
 FROM php:7.4-apache
 
-# HABILITA O MÓDULO DE REWRITING DO APACHE (A CAUSA DO ERRO)
+# Atualiza os pacotes e instala o cliente MySQL e outras dependências
+# ESTA LINHA CORRIGE O ERRO "mysqladmin: command not found"
+RUN apt-get update && apt-get install -y default-mysql-client libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql
+
+# Habilita o módulo rewrite do Apache (para o .htaccess funcionar)
 RUN a2enmod rewrite
 
-# Instala as extensões PHP necessárias para se conectar ao MySQL
-RUN docker-php-ext-install pdo pdo_mysql
-
-# Copia o arquivo de configuração do site para permitir que o .htaccess funcione
+# Copia o arquivo de configuração do site para permitir o uso do .htaccess
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Copia o script que prepara o banco de dados e inicia a aplicação

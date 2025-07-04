@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-define('BASE_URL', '/phpeso');
+define('BASE_URL', '/');
 
 if (isset($_GET['controller']) && isset($_GET['action'])) {
   require_once "./app/controller/user/UserController.php";

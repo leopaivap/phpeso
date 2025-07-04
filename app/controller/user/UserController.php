@@ -26,7 +26,6 @@ class UserController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->userService->insert($data);
             if ($response) {
-                // CORREÇÃO: Redireciona para a ROTA de login
                 header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
                 exit;
             } else {
@@ -57,12 +56,10 @@ class UserController
             $_SESSION['user_username'] = $user['username'];
             $_SESSION['user_firstname'] = $user['firstName'];
 
-            // CORREÇÃO: Redireciona para a ROTA da página inicial
             header('Location: ' . BASE_URL . 'index.php');
             exit;
         } else {
             $_SESSION['login_error'] = "Usuário ou senha inválidos.";
-            // CORREÇÃO: Redireciona de volta para a ROTA de login
             header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
             exit;
         }
@@ -72,39 +69,33 @@ class UserController
     {
         if (session_status() === PHP_SESSION_NONE)
             session_start();
-
         $_SESSION = array();
         session_destroy();
-
-        // CORREÇÃO: Redireciona para a ROTA de login
         header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
         exit;
     }
+
     public function update(int $id, array $data): void
     {
         if ($data === null || empty($data) || $id === null || empty($id))
             return;
 
-        // TODO --> CRIAR TELA DE ALTERAR PERFIL PARA REDIRECT DE SUCESSO E DE FALHA
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             $response = $this->userService->update($id, $data);
             if ($response) {
-                // REDIRECT AQUI
                 header('Location: ./app/view/login.php');
                 exit;
             } else {
                 echo "Erro ao alterar o usuário.";
-                // REDIRECT AQUI
                 require './app/view/user/register.php';
             }
         }
     }
-    public function selectAll(string $method): array|null
+    
+    public function selectAll(string $method): ?array
     {
         if ($method === 'GET') {
             $users = $this->userService->selectAll();
-
-            // TODO --> PAINEL ADM: Visualizar lista de usuários na Dashboard
             if ($users) {
                 return $users;
             } else {
@@ -119,7 +110,6 @@ class UserController
     {
         if ($method === 'GET') {
             $user = $this->userService->findById($id);
-
             if ($user) {
                 return $user;
             } else {
@@ -130,11 +120,10 @@ class UserController
         return null;
     }
 
-    public function selectAllByRole(string $role, string $method): array|null
+    public function selectAllByRole(string $role, string $method): ?array
     {
         if ($method === 'GET') {
             $users = $this->userService->selectAllByRole($role);
-
             if ($users) {
                 return $users;
             } else if (empty($user)) {
@@ -154,8 +143,6 @@ class UserController
 
         if ($method === 'DELETE') {
             $response = $this->userService->delete($id);
-
-            // TODO --> PAINEL ADM: Visualizar lista de usuários na Dashboard || Voltar para login se for usuário normal apagando a conta pessoal.
             if ($response) {
                 header('Location: /views/success.php');
             } else {
@@ -163,5 +150,4 @@ class UserController
             }
         }
     }
-
 }

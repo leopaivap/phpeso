@@ -18,7 +18,7 @@ class ExerciseController extends BaseController
 
     public function list(): void
     {
-    
+
         $exercises = $this->exerciseService->selectAll();
 
         $muscleGroupRepository = new MuscleGroupRepository();
@@ -73,7 +73,7 @@ class ExerciseController extends BaseController
             }
         }
     }
-    public function selectAll(string $method): array|null
+    public function selectAll(string $method): ?array
     {
         if ($method === 'GET') {
             $response = $this->exerciseService->selectAll();

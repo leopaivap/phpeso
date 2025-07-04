@@ -1,5 +1,7 @@
 <?php
+
 session_start();
+define('BASE_URL', '/phpeso');
 
 if (isset($_GET['controller']) && isset($_GET['action'])) {
   require_once "./app/controller/user/UserController.php";
@@ -8,43 +10,45 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
-  $id = $_GET['id'] ?? null;
 
-  // Pegando o método do GET para o delete
-  $method = $_GET['method'] ?? $_SERVER['REQUEST_METHOD'];
 
-  // Sanitiza os dados do POST
-  $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS) ?? [];
-  switch ($controllerName) {
-    case 'user':
-      $controller = new UserController();
-      break;
-    case 'exercise':
-      $controller = new ExerciseController();
-      break;
-    case 'workout':
-      $controller = new WorkoutController();
-      break;
-    default:
-      http_response_code(404);
-      echo "Controlador não encontrado.";
-      exit;
-  }
+  $controllerClass = ucfirst($controllerName) . 'Controller';
 
-  // Chama a ação correspondente no controller
-  if (method_exists($controller, $action)) {
-    if ($id) {
-      $controller->$action($id, $data, $method);
+  if (class_exists($controllerClass)) {
+    $controller = new $controllerClass();
+
+    if (method_exists($controller, $action)) {
+      $id = $_GET['id'] ?? null;
+      $method = $_GET['method'] ?? $_SERVER['REQUEST_METHOD'];
+      $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS) ?? [];
+
+
+      if (in_array($action, ['list', 'logout', 'showLogin', 'showRegister'])) {
+        $controller->$action();
+      } else if (in_array($action, ['insert', 'login'])) {
+        $controller->$action($data);
+      } else if ($id) {
+
+        if ($action === 'delete') {
+          $controller->$action($id, $data, $method);
+        } else {
+
+          $controller->$action($id, $data);
+        }
+      } else {
+        http_response_code(400);
+        echo "Parâmetros inválidos para a ação '$action'.";
+      }
+
     } else {
-      $controller->$action($data);
+      http_response_code(404);
+      echo "Ação '$action' não encontrada no controlador '$controllerClass'.";
     }
   } else {
     http_response_code(404);
-    echo "Ação '$action' não encontrada.";
+    echo "Controlador '$controllerClass' não encontrado.";
   }
-
   exit;
 }
 
 require_once './app/view/home.php';
-?>

@@ -12,6 +12,16 @@ class UserController
         $this->userService = new UserService();
     }
 
+    public function showLogin(): void
+    {
+        require_once __DIR__ . '/../../view/user/login.php';
+    }
+
+    public function showRegister(): void
+    {
+        require_once __DIR__ . '/../../view/user/register.php';
+    }
+
     public function insert(array $data): void
     {
         if ($data === null || empty($data))

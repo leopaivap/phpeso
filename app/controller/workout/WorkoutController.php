@@ -6,14 +6,12 @@ require_once __DIR__ . '/../../service/user/UserService.php';
 
 class WorkoutController extends BaseController
 {
-
     private WorkoutService $workoutService;
     private UserService $userService;
 
     public function __construct()
     {
         parent::__construct();
-
         $this->workoutService = new WorkoutService();
         $this->userService = new UserService();
     }
@@ -21,10 +19,8 @@ class WorkoutController extends BaseController
     public function list(): void
     {
         $workouts = $this->workoutService->selectAll();
-
         $students = $this->userService->selectAllByRole("client");
         $trainerList = $this->userService->selectAllByRole("trainer");
-
 
         $editing = false;
         $workout_form_data = [
@@ -48,39 +44,33 @@ class WorkoutController extends BaseController
 
     public function insert(array $data): void
     {
-        if ($data === null || empty($data))
-            return;
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->workoutService->insert($data);
-
             if ($response) {
-                header('Location: /phpeso/index.php?controller=workout&action=list');
+                // CORREÇÃO: Redireciona para a ROTA de lista de treinos
+                header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
                 exit;
             } else {
                 echo "Erro ao cadastrar treino.";
-                require 'index.php';
             }
         }
     }
+
     public function update(int $id, array $data): void
     {
-        if ($data === null || empty($data) || $id === null || empty($id))
-            return;
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->workoutService->update($id, $data);
-
             if ($response) {
-                header('Location: /phpeso/index.php?controller=workout&action=list');
+                // CORREÇÃO: Redireciona para a ROTA de lista de treinos
+                header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
                 exit;
             } else {
                 echo "Erro ao alterar treino.";
-                require 'index.php';
             }
         }
     }
-    public function selectAll(string $method): array|null
+
+    public function selectAll(string $method): ?array
     {
         if ($method === 'GET') {
             $workouts = $this->workoutService->selectAll();
@@ -97,7 +87,7 @@ class WorkoutController extends BaseController
         return null;
     }
 
-    public function findById($id, $method): array|null
+    public function findById($id, $method): ?array
     {
         if ($method === "GET") {
             $workout = $this->workoutService->findById($id);

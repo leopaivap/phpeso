@@ -105,7 +105,7 @@ class WorkoutRepository implements RepositoryInterface
         }
     }
 
-    public function findById(int $id): array|null
+    public function findById(int $id): ?array
     {
         try {
             $sql = "

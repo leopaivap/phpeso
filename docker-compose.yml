@@ -5,6 +5,7 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: db_phpeso
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_ROOT_PASSWORD:
       MYSQL_ROOT_HOST: "%"
     volumes:
@@ -17,12 +18,17 @@ services:
   php:
     build: .
     volumes:
-      - ./src:/var/www/html
+      - .:/var/www/html
     ports:
       - "80:80"
     depends_on:
       mysql:
         condition: service_started
+    environment:
+      DB_SERVER: mysql
+      DB_NAME: db_phpeso
+      DB_USER: root
+      DB_PASSWORD: ""
 
 volumes:
   mysql_data:

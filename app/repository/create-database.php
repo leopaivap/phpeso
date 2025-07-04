@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../repository/Connection.php";
+require_once __DIR__ . '/Connection.php';
 
 try {
   $db_config = Connection::getInstance()->getDatabaseConfig();

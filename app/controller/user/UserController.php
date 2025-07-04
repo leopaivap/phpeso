@@ -4,7 +4,6 @@ require_once __DIR__ . '/../../service/user/UserService.php';
 
 class UserController
 {
-
     private UserService $userService;
 
     public function __construct()
@@ -24,19 +23,62 @@ class UserController
 
     public function insert(array $data): void
     {
-        if ($data === null || empty($data))
-            return;
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->userService->insert($data);
             if ($response) {
-                header('Location: ./app/view/user/login.php');
+                // CORREÇÃO: Redireciona para a ROTA de login
+                header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
                 exit;
             } else {
-                echo "Erro ao cadastrar o usuário.";
-                require './app/view/user/register.php';
+                $_SESSION['register_error'] = "Erro ao cadastrar o usuário. Tente novamente.";
+                header('Location: ' . BASE_URL . 'index.php?controller=user&action=showRegister');
+                exit;
             }
         }
+    }
+
+    public function login(array $data): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+            return;
+        if (session_status() === PHP_SESSION_NONE)
+            session_start();
+
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
+
+        require_once __DIR__ . "/../../repository/user/UserRepository.php";
+        $userRepository = new UserRepository();
+        $user = $userRepository->findByUsername($username);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_loggedin'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_username'] = $user['username'];
+            $_SESSION['user_firstname'] = $user['firstName'];
+
+            // CORREÇÃO: Redireciona para a ROTA da página inicial
+            header('Location: ' . BASE_URL . 'index.php');
+            exit;
+        } else {
+            $_SESSION['login_error'] = "Usuário ou senha inválidos.";
+            // CORREÇÃO: Redireciona de volta para a ROTA de login
+            header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
+            exit;
+        }
+    }
+
+    public function logout(): void
+    {
+        if (session_status() === PHP_SESSION_NONE)
+            session_start();
+
+        $_SESSION = array();
+        session_destroy();
+
+        // CORREÇÃO: Redireciona para a ROTA de login
+        header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
+        exit;
     }
     public function update(int $id, array $data): void
     {
@@ -120,50 +162,6 @@ class UserController
                 echo "Erro ao deletar o usuário.";
             }
         }
-    }
-
-    public function login(array $data): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-            return;
-        if (session_status() === PHP_SESSION_NONE)
-            session_start();
-
-        $username = $data['username'] ?? '';
-        $password = $data['password'] ?? '';
-
-        // Busca o usuário no repositório
-        require_once __DIR__ . "/../../repository/user/UserRepository.php";
-        $userRepository = new UserRepository();
-        $user = $userRepository->findByUsername($username);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Login bem-sucedido: armazena dados na sessão
-            $_SESSION['user_loggedin'] = true;
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_username'] = $user['username'];
-            $_SESSION['user_firstname'] = $user['firstName'];
-
-            header("Location: /phpeso/index.php");
-            exit;
-        } else {
-            $_SESSION['login_error'] = "Usuário ou senha inválidos.";
-            header("Location: /phpeso/app/view/user/login.php");
-            exit;
-        }
-    }
-
-    public function logout(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $_SESSION = array();
-        session_destroy();
-
-        header("Location: /phpeso/app/view/user/login.php");
-        exit;
     }
 
 }

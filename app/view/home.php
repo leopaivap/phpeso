@@ -7,13 +7,14 @@
     <title>PhPeso - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="public/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
 </head>
 
 <body class="bg-white text-dark">
     <?php include_once __DIR__ . '/templates/navbar.php'; ?>
 
     <main class="container mt-5">
-        <div class="row align-items-center">
+        <section class="row align-items-center">
             <div class="col-md-6">
                 <h1 class="display-4 text-orange">PhPeso</h1>
                 <p class="lead">
@@ -24,7 +25,30 @@
             <div class="col-md-6 text-center">
                 <img src="public/assets/home.jpg" alt="Imagem academia" class="img-fluid rounded" />
             </div>
-        </div>
+        </section>
+        <section id="how-it-works-section">
+            <div class="section-header">
+                <h2>Como funciona? <span></span></h2>
+                <p>Avalie, treine com propósito e acompanhe sua evolução de forma prática e contínua.</p>
+            </div>
+            <div class="how-it-works-cards">
+                <div class="how-it-works-card">
+                    <h3>Realize Avaliações Físicas</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                </div>
+                <div class="how-it-works-card">
+                    <h3>Crie Treinos Personalizados</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                </div>
+                <div class="how-it-works-card">
+                    <h3>Acompanhe sua evolução</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                </div>
+            </div>
+            <div class="how-it-works-cta">
+                <span class="hiw-cta">Saiba Mais</span>
+            </div>
+        </section>
 
         <section class="mt-5">
             <h2 class="h4">Treinos Recentes</h2>

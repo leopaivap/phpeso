@@ -8,14 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="public/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/home.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/about.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/modalities.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/free-trial-cta.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/user-feedback.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body class="bg-white text-dark">
@@ -24,7 +20,8 @@
     <main class="container mt-5">
         <section class="row align-items-center">
             <div class="col-md-6">
-                <h1><span class="text-orange">Uma plataforma de treinos</span> pensada especialmente para<br> o seu resultado!
+                <h1><span class="text-orange">Uma plataforma de treinos</span> pensada especialmente para<br> o seu
+                    resultado!
                 </h1>
                 <p class="lead">
                     Acesse seus treinos, acompanhe sua evolução e receba orientações personalizadas.
@@ -40,7 +37,10 @@
             <img src="public/assets/about.webp" alt="Imagem academia" class="img-fluid rounded col-md-6" />
             <div class="section-header col-md-6">
                 <h2>Sobre<br>a academia<span></span></h2>
-                <p>A phpeso é uma academia moderna com estrutura completa, treinos personalizados e acompanhamento profissional. Oferecemos aulas e programas para todos os níveis, focando em saúde, bem-estar e resultados reais. Aqui, você treina com motivação e faz parte de uma comunidade que evolui junta.</p>
+                <p>A phpeso é uma academia moderna com estrutura completa, treinos personalizados e acompanhamento
+                    profissional. Oferecemos aulas e programas para todos os níveis, focando em saúde, bem-estar e
+                    resultados reais. Aqui, você treina com motivação e faz parte de uma comunidade que evolui junta.
+                </p>
             </div>
         </section>
 
@@ -81,15 +81,18 @@
             <div class="how-it-works-cards">
                 <div class="how-it-works-card">
                     <h3>Realize Avaliações Físicas</h3>
-                    <p>Faça avaliações completas para entender seu condicionamento atual e definir metas reais com base em dados precisos.</p>
+                    <p>Faça avaliações completas para entender seu condicionamento atual e definir metas reais com base
+                        em dados precisos.</p>
                 </div>
                 <div class="how-it-works-card">
                     <h3>Crie Treinos Personalizados</h3>
-                    <p>Monte treinos sob medida para cada aluno com base em objetivos, nível físico e histórico, tudo de forma prática e organizada.</p>
+                    <p>Monte treinos sob medida para cada aluno com base em objetivos, nível físico e histórico, tudo de
+                        forma prática e organizada.</p>
                 </div>
                 <div class="how-it-works-card">
                     <h3>Acompanhe sua evolução</h3>
-                    <p>Monitore resultados em tempo real com gráficos, relatórios e histórico de desempenho para manter a motivação e ajustar estratégias.</p>
+                    <p>Monitore resultados em tempo real com gráficos, relatórios e histórico de desempenho para manter
+                        a motivação e ajustar estratégias.</p>
                 </div>
             </div>
             <div class="how-it-works-cta">
@@ -112,7 +115,7 @@
             <div class="user-feedback-list">
                 <div class="user-feedback-card">
                     <div class="user-feedback-card-circle">
-                        <img src="public/assets/juliana.webp" alt="Imagem de perfil do usuário Arielce Junior.">
+                        <img src="public/assets/juliana.webp" alt="Imagem de perfil do usuário Juliana Machado.">
                     </div>
                     <h3>Juliana Machado</h3>
                     <div class="d-flex">

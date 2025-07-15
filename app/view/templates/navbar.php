@@ -4,7 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-    <a class="navbar-brand text-orange" href="/phpeso/index.php"><img class="w-100" src="public/assets/logo.webp" alt="Imagem Logo PhPeso."></a>
+    <a class="navbar-brand text-orange" href="/phpeso/index.php"><img class="w-100"
+            src="/phpeso/public/assets/logo.webp" alt="Imagem Logo PhPeso."></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks">
         <span class="navbar-toggler-icon"></span>
     </button>

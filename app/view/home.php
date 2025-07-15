@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="public/css/style.css" />
     <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/user-feedback.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body class="bg-white text-dark">
@@ -26,6 +28,7 @@
                 <img src="public/assets/home.jpg" alt="Imagem academia" class="img-fluid rounded" />
             </div>
         </section>
+
         <section id="how-it-works-section">
             <div class="section-header">
                 <h2>Como funciona? <span></span></h2>
@@ -47,6 +50,63 @@
             </div>
             <div class="how-it-works-cta">
                 <span class="hiw-cta">Saiba Mais</span>
+            </div>
+        </section>
+
+        <section id="user-feedback-section">
+            <div class="section-header">
+                <h2>O que dizem<br>nossos clientes <span></span></h2>
+                <p>Confira os feedbacks de usuários reais e veja como nosso método faz a diferença.</p>
+            </div>
+
+            <div class="user-feedback-list">
+                <div class="user-feedback-card">
+                    <div class="user-feedback-card-circle">
+                        <img src="public/assets/juliana.webp" alt="Imagem de perfil do usuário Arielce Junior.">
+                    </div>
+                    <h3>Juliana Machado</h3>
+                    <div class="d-flex">
+                        <?php
+                        for ($i = 0; $i < 5; $i++) {
+                            echo "<i class='fa-solid fa-star'></i>";
+                        }
+                        ?>
+                    </div>
+                    <p>"Acompanhamento de qualidade e ensino claro me mantiveram focada e em progresso."</p>
+                </div>
+
+                <div class="user-feedback-card">
+                    <div class="user-feedback-card-circle">
+                        <img src="public/assets/arielce.webp" alt="Imagem de perfil do usuário Arielce Junior.">
+                    </div>
+                    <h3>Arielce Junior</h3>
+                    <div class="d-flex">
+                        <?php
+                        for ($i = 0; $i < 5; $i++) {
+                            if ($i === 4) {
+                                echo "<i class='fa-regular fa-star'></i>";
+                                continue;
+                            }
+                            echo "<i class='fa-solid fa-star'></i>";
+                        }
+                        ?>
+                    </div>
+                    <p>"Suporte rápido e plataforma intuitiva tornaram minha jornada mais fácil e eficiente."</p>
+                </div>
+                <div class="user-feedback-card">
+                    <div class="user-feedback-card-circle">
+                        <img src="public/assets/gustavo.webp" alt="Imagem de perfil do usuário Gustavo Luiz.">
+                    </div>
+                    <h3>Gustavo Luiz</h3>
+                    <div class="d-flex">
+                        <?php
+                        for ($i = 0; $i < 5; $i++) {
+                            echo "<i class='fa-solid fa-star'></i>";
+                        }
+                        ?>
+                    </div>
+                    <p>"Treinos organizados e professores atenciosos me ajudaram a evoluir com clareza."</p>
+                </div>
             </div>
         </section>
 

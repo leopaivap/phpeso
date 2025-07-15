@@ -1,6 +1,6 @@
 :root {
   --orange: #f69c58;
-  --black: #222;
+  --black: #212529;
   --white: #fff;
 }
 #how-it-works-section {
@@ -56,7 +56,7 @@
       justify-content: stretch;
       padding: 1rem;
       border-radius: 0.5rem;
-      flex: 0 0 250px;
+      flex: 0 0 350px;
 
       & h3 {
         font-size: 1.4rem;

@@ -1,0 +1,93 @@
+#modalities {
+  margin-top: 5rem;
+  border: 2px solid var(--orange);
+  border-radius: 0.5rem;
+  padding: 2rem 0;
+
+  & .section-header {
+    width: 100%;
+    text-align: center;
+    & h2 {
+      color: var(--black);
+      text-align: center;
+      font-size: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      & span {
+        margin: 10px 0;
+        text-align: center;
+        justify-self: center;
+        content: "";
+        display: block;
+        width: 70px;
+        height: 3px;
+        background-color: var(--orange);
+      }
+    }
+
+    & p {
+      text-align: center;
+      font-size: 1.2rem;
+    }
+  }
+
+  & .modalities-list {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
+    text-align: center;
+    padding: 0 1.2rem;
+
+    & .modalities-card {
+      flex: 0 0 260px;
+      background-color: var(--black);
+      border-radius: 0.5rem;
+      padding: 10px;
+
+      & i {
+        font-size: 2rem;
+        color: var(--orange);
+      }
+
+      & h3 {
+        color: var(--orange);
+        font-size: 1.4rem;
+      }
+
+      & p {
+        color: var(--white);
+      }
+    }
+  }
+
+  & .modalities-cta {
+    display: flex;
+    padding-top: 2rem;
+    justify-content: center;
+    align-items: center;
+
+    & .btn-cta-modalities {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      width: fit-content;
+      padding: 0 22px;
+      border-radius: 16px;
+      background-color: var(--white);
+      border: 2px solid var(--orange);
+      font-weight: 500;
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0px 0px 10px var(--orange);
+      }
+    }
+  }
+}

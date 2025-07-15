@@ -8,10 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="public/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/user-feedback.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/free-trial-cta.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/home.css" />
     <link rel="stylesheet" type="text/css" href="public/css/about.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/modalities.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/free-trial-cta.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/user-feedback.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -22,12 +24,12 @@
     <main class="container mt-5">
         <section class="row align-items-center">
             <div class="col-md-6">
-                <h1><span class="text-orange">Uma plataforma de treinos</span> pensada especialmente para o seu resultado!
+                <h1><span class="text-orange">Uma plataforma de treinos</span> pensada especialmente para<br> o seu resultado!
                 </h1>
                 <p class="lead">
                     Acesse seus treinos, acompanhe sua evolução e receba orientações personalizadas.
                 </p>
-                <p class="lead">Cadastre-se e comece agora!</p>
+                <span class="home-cta">Cadastre-se e comece agora!</p>
             </div>
             <div class="col-md-6 text-center">
                 <img src="public/assets/home.webp" alt="Imagem academia" class="img-fluid rounded" />
@@ -39,6 +41,35 @@
             <div class="section-header col-md-6">
                 <h2>Sobre<br>a academia<span></span></h2>
                 <p>A phpeso é uma academia moderna com estrutura completa, treinos personalizados e acompanhamento profissional. Oferecemos aulas e programas para todos os níveis, focando em saúde, bem-estar e resultados reais. Aqui, você treina com motivação e faz parte de uma comunidade que evolui junta.</p>
+            </div>
+        </section>
+
+        <section id="modalities">
+            <div class="section-header">
+                <h2>Nossas Modalidades<span></span></h2>
+                <p>Explore nossas opções de treino.</p>
+            </div>
+            <div class="modalities-list">
+                <div class="modalities-card">
+                    <i class="fa-solid fa-dumbbell"></i>
+                    <h3>Musculação</h3>
+                    <p>Desenvolva força, resistência e definição muscular com treinos personalizados</p>
+                </div>
+                <div class="modalities-card">
+                    <i class="fas fa-running"></i>
+                    <h3>Ginástica</h3>
+                    <p>Melhore sua flexibilidade, coordenação e condicionamento com aulas dinâmicas</p>
+                </div>
+                <div class="modalities-card">
+                    <i class="fa-solid fa-music"></i>
+                    <h3>Hit Box</h3>
+                    <p>Uma combinação intensa de boxe e treino funcional para queimar calorias e aliviar o estresse</p>
+                </div>
+            </div>
+            <div class="modalities-cta">
+                <span class="btn-cta-modalities">
+                    Confira Nossos Horários
+                </span>
             </div>
         </section>
 
@@ -129,20 +160,6 @@
             </div>
         </section>
 
-        <section class="mt-5">
-            <h2 class="h4">Treinos Recentes</h2>
-            <ul class="list-group mt-3">
-                <li class="list-group-item">
-                    <a href="#" class="text-decoration-none text-dark">Treino Peito - 10/04/2025</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="text-decoration-none text-dark">Treino Pernas - 08/04/2025</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="text-decoration-none text-dark">Treino Costas - 05/04/2025</a>
-                </li>
-            </ul>
-        </section>
     </main>
 
     <?php include_once __DIR__ . '/templates/footer.php'; ?>

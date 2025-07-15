@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PhPeso - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
     <link rel="stylesheet" type="text/css" href="public/css/style.css" />
     <link rel="stylesheet" type="text/css" href="public/css/how-it-works.css" />
     <link rel="stylesheet" type="text/css" href="public/css/user-feedback.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/free-trial-cta.css" />
+    <link rel="stylesheet" type="text/css" href="public/css/about.css" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -18,14 +22,23 @@
     <main class="container mt-5">
         <section class="row align-items-center">
             <div class="col-md-6">
-                <h1 class="display-4 text-orange">PhPeso</h1>
+                <h1><span class="text-orange">Uma plataforma de treinos</span> pensada especialmente para o seu resultado!
+                </h1>
                 <p class="lead">
-                    Gerencie seus treinos de academia com facilidade! Visualize,
-                    adicione e acompanhe seus treinos e exercícios de forma simples.
+                    Acesse seus treinos, acompanhe sua evolução e receba orientações personalizadas.
                 </p>
+                <p class="lead">Cadastre-se e comece agora!</p>
             </div>
             <div class="col-md-6 text-center">
-                <img src="public/assets/home.jpg" alt="Imagem academia" class="img-fluid rounded" />
+                <img src="public/assets/home.webp" alt="Imagem academia" class="img-fluid rounded" />
+            </div>
+        </section>
+
+        <section id="about">
+            <img src="public/assets/about.webp" alt="Imagem academia" class="img-fluid rounded col-md-6" />
+            <div class="section-header col-md-6">
+                <h2>Sobre<br>a academia<span></span></h2>
+                <p>A phpeso é uma academia moderna com estrutura completa, treinos personalizados e acompanhamento profissional. Oferecemos aulas e programas para todos os níveis, focando em saúde, bem-estar e resultados reais. Aqui, você treina com motivação e faz parte de uma comunidade que evolui junta.</p>
             </div>
         </section>
 
@@ -51,6 +64,12 @@
             <div class="how-it-works-cta">
                 <span class="hiw-cta">Saiba Mais</span>
             </div>
+        </section>
+
+        <section id="free-trial-cta">
+            <h2>Faça uma aula<br>
+                experimental <strong>gratuita</strong></h2>
+            <span class="free-trial-cta">Agende sua Aula</span>
         </section>
 
         <section id="user-feedback-section">

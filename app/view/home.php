@@ -81,15 +81,15 @@
             <div class="how-it-works-cards">
                 <div class="how-it-works-card">
                     <h3>Realize Avaliações Físicas</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                    <p>Faça avaliações completas para entender seu condicionamento atual e definir metas reais com base em dados precisos.</p>
                 </div>
                 <div class="how-it-works-card">
                     <h3>Crie Treinos Personalizados</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                    <p>Monte treinos sob medida para cada aluno com base em objetivos, nível físico e histórico, tudo de forma prática e organizada.</p>
                 </div>
                 <div class="how-it-works-card">
                     <h3>Acompanhe sua evolução</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, rerum? Alias harum iure esse quo.</p>
+                    <p>Monitore resultados em tempo real com gráficos, relatórios e histórico de desempenho para manter a motivação e ajustar estratégias.</p>
                 </div>
             </div>
             <div class="how-it-works-cta">

@@ -4,13 +4,19 @@ session_start();
 define('BASE_URL', '/');
 
 if (isset($_GET['controller']) && isset($_GET['action'])) {
-  require_once "./app/controller/user/UserController.php";
-  require_once "./app/controller/exercise/ExerciseController.php";
-  require_once "./app/controller/workout/WorkoutController.php";
-
   $controllerName = $_GET['controller'];
   $action = $_GET['action'];
 
+  $controllerFile = './app/controller/' . $controllerName . '/' . ucfirst($controllerName) . 'Controller.php';
+
+  // Verifica se o arquivo do controller existe antes de incluí-lo
+  if (file_exists($controllerFile)) {
+    require_once $controllerFile;
+  } else {
+    http_response_code(404);
+    echo "Controlador '$controllerName' não encontrado.";
+    exit;
+  }
 
   $controllerClass = ucfirst($controllerName) . 'Controller';
 
@@ -18,28 +24,36 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
     $controller = new $controllerClass();
 
     if (method_exists($controller, $action)) {
-      $id = $_GET['id'] ?? null;
-      $method = $_GET['method'] ?? $_SERVER['REQUEST_METHOD'];
-      $data = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS) ?? [];
+      $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+      $method = $_SERVER['REQUEST_METHOD'];
+      $data = $_POST ?? [];
 
-
-      if (in_array($action, ['list', 'logout', 'showLogin', 'showRegister'])) {
-        $controller->$action();
-      } else if (in_array($action, ['insert', 'login'])) {
-        $controller->$action($data);
-      } else if ($id) {
-
-        if ($action === 'delete') {
-          $controller->$action($id, $data, $method);
+      // Ações que não precisam de login ou parâmetros
+      $publicActions = ['showLogin', 'showRegister', 'login', 'insert', 'logout'];
+      if (in_array($action, $publicActions)) {
+        // Para login e insert, passamos os dados do POST
+        if ($action === 'login' || $action === 'insert') {
+          $controller->$action($data);
         } else {
-
-          $controller->$action($id, $data);
+          $controller->$action();
         }
       } else {
-        http_response_code(400);
-        echo "Parâmetros inválidos para a ação '$action'.";
+        // Ações que precisam de login (BaseController cuida da verificação)
+        if ($id !== null) {
+          // Ações com ID
+          if ($action === 'updateRole') {
+            $controller->updateRole($id, $data);
+          } elseif ($action === 'deleteUser') {
+            $controller->deleteUser($id);
+          } else {
+            // Ações genéricas de update/delete de outros controllers
+            $controller->$action($id, $data);
+          }
+        } else {
+          // Ações sem ID (como 'list')
+          $controller->$action();
+        }
       }
-
     } else {
       http_response_code(404);
       echo "Ação '$action' não encontrada no controlador '$controllerClass'.";

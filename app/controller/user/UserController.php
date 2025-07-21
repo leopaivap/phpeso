@@ -1,16 +1,19 @@
 <?php
 
 require_once __DIR__ . '/../../service/user/UserService.php';
+require_once __DIR__ . '/../BaseController.php';
 
-class UserController
+class UserController extends BaseController
 {
     private UserService $userService;
 
     public function __construct()
     {
-        $this->userService = new UserService();
+        // O construtor do BaseController já inicia a sessão e verifica o login
+        // para as páginas protegidas.
     }
 
+    // Ações públicas (não precisam de login)
     public function showLogin(): void
     {
         require_once __DIR__ . '/../../view/user/login.php';
@@ -23,6 +26,7 @@ class UserController
 
     public function insert(array $data): void
     {
+        $this->userService = new UserService();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = $this->userService->insert($data);
             if ($response) {
@@ -55,6 +59,7 @@ class UserController
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_username'] = $user['username'];
             $_SESSION['user_firstname'] = $user['firstName'];
+            $_SESSION['user_role'] = $user['role']; // GUARDA A PERMISSÃO NA SESSÃO
 
             header('Location: ' . BASE_URL . 'index.php');
             exit;
@@ -75,79 +80,57 @@ class UserController
         exit;
     }
 
-    public function update(int $id, array $data): void
+    // Ações de Administrador
+    private function requireAdmin(): void
     {
-        if ($data === null || empty($data) || $id === null || empty($id))
-            return;
+        parent::__construct(); // Garante que está logado
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            // Se não for admin, redireciona para a home
+            header('Location: ' . BASE_URL . 'index.php');
+            exit;
+        }
+        $this->userService = new UserService();
+    }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-            $response = $this->userService->update($id, $data);
+    public function list(): void
+    {
+        $this->requireAdmin(); // Protege a página
+        $users = $this->userService->selectAll();
+        require_once __DIR__ . '/../../view/user/users.php';
+    }
+
+    public function updateRole(int $id, array $data): void
+    {
+        $this->requireAdmin();
+        $role = $data['role'] ?? null;
+        if ($id && $role) {
+            $response = $this->userService->updateRole($id, $role);
             if ($response) {
-                header('Location: ./app/view/login.php');
-                exit;
+                $_SESSION['success_message'] = "Permissão do usuário atualizada com sucesso!";
             } else {
-                echo "Erro ao alterar o usuário.";
-                require './app/view/user/register.php';
+                $_SESSION['error_message'] = "Erro ao atualizar a permissão.";
             }
         }
-    }
-    
-    public function selectAll(string $method): ?array
-    {
-        if ($method === 'GET') {
-            $users = $this->userService->selectAll();
-            if ($users) {
-                return $users;
-            } else {
-                echo "Erro ao selecionar os usuários.";
-                return null;
-            }
-        }
-        return null;
+        header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
+        exit;
     }
 
-    public function findById(int $id, string $method): ?User
+    public function deleteUser(int $id): void
     {
-        if ($method === 'GET') {
-            $user = $this->userService->findById($id);
-            if ($user) {
-                return $user;
-            } else {
-                echo "Erro ao selecionar usuário por ID.";
-                return null;
-            }
+        $this->requireAdmin();
+        if ($id === $_SESSION['user_id']) {
+            $_SESSION['error_message'] = "Você não pode apagar a si mesmo.";
+            header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
+            exit;
         }
-        return null;
-    }
 
-    public function selectAllByRole(string $role, string $method): ?array
-    {
-        if ($method === 'GET') {
-            $users = $this->userService->selectAllByRole($role);
-            if ($users) {
-                return $users;
-            } else if (empty($user)) {
-                echo "Erro ao selecionar os usuários por função.";
-                return [];
-            } else {
-                return null;
-            }
+        $response = $this->userService->delete($id);
+        if ($response) {
+            $_SESSION['success_message'] = "Usuário apagado com sucesso!";
+        } else {
+            $_SESSION['error_message'] = "Erro ao apagar o usuário.";
         }
-        return null;
-    }
-
-    public function delete(int $id, string $method): void
-    {
-        if ($id === null || empty($id))
-            return;
-
-        if ($method === 'DELETE') {
-            $response = $this->userService->delete($id);
-            if ($response) {
-                header('Location: /views/success.php');
-            } else {
-                echo "Erro ao deletar o usuário.";
-            }
-        }
+        header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
+        exit;
     }
 }

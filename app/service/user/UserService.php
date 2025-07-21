@@ -138,4 +138,13 @@ class UserService implements ServiceInterface
         }
         return true;
     }
+
+    public function updateRole(int $id, string $role): bool
+    {
+        $allowedRoles = ['client', 'trainer', 'admin'];
+        if (!in_array($role, $allowedRoles)) {
+            return false;
+        }
+        return $this->userRepository->updateRole($id, $role);
+    }
 }

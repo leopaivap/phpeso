@@ -114,7 +114,8 @@ class UserRepository implements RepositoryInterface
             u.email, 
             u.phoneNumber, 
             u.gender,
-            u.birth_date 
+            u.birth_date,
+            u.role
             FROM users AS u;";
 
             $stmt = $this->connection->prepare($sql);
@@ -134,7 +135,7 @@ class UserRepository implements RepositoryInterface
     {
         try {
             $sql = "
-                SELECT id, firstName, lastName, username, email, phoneNumber, gender FROM users WHERE id = :id;
+                SELECT id, firstName, lastName, username, email, phoneNumber, gender, role FROM users WHERE id = :id;
             ";
 
             $stmt = $this->connection->prepare($sql);
@@ -182,7 +183,7 @@ class UserRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         try {
-            $sql = "DELETE FROM users AS u WHERE u.id = :id";
+            $sql = "DELETE FROM users WHERE id = :id";
 
             $stmt = $this->connection->prepare($sql);
 
@@ -208,6 +209,22 @@ class UserRepository implements RepositoryInterface
         } catch (PDOException $e) {
             echo "Erro ao buscar usuário por username: " . $e->getMessage();
             return null;
+        }
+    }
+
+    public function updateRole(int $id, string $role): bool
+    {
+        try {
+            $sql = "UPDATE users SET role = :role WHERE id = :id";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute([
+                ':role' => $role,
+                ':id' => $id
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            echo "Erro ao alterar a permissão do usuário: " . $e->getMessage();
+            return false;
         }
     }
 }

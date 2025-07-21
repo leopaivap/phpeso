@@ -1,0 +1,36 @@
+#free-trial-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 5rem;
+  background-color: var(--black);
+  height: 200px;
+  gap: 1rem;
+  & h2 {
+    color: var(--white);
+
+    & strong {
+      color: var(--orange);
+    }
+  }
+
+  & .free-trial-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 40px;
+    background-color: var(--orange);
+    border-radius: 0.5rem;
+    color: var(--black);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    &:hover {
+      background-color: var(--white);
+      box-shadow: 0px 0px 5px var(--white);
+    }
+  }
+}

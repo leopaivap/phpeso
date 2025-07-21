@@ -1,13 +1,10 @@
 <?php
-$server = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'db_phpeso';
+require_once __DIR__ . '/Connection.php';
 
 try {
-    $dsn = "mysql:host=$server;dbname=$database;charset=utf8";
-    $connection = new PDO($dsn, $user, $password);
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db_config = Connection::getInstance()->getDatabaseConfig();
+    $dsn = "mysql:host={$db_config['db_server']};dbname={$db_config['db_name']};charset=utf8";
+    $connection = new PDO($dsn, $db_config['db_user'], $db_config['db_password'], $db_config['db_options']);
 
     // TABELA USUÁRIOS
     $sql = "

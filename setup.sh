@@ -1,13 +1,14 @@
 #!/bin/bash
 
-# USA AS VARIÁVEIS DA RAILWAY PARA ESPERAR PELO BANCO DE DADOS
+# USA AS VARIÁVEIS CORRETAS (DB_*) PARA ESPERAR PELO BANCO DE DADOS
 echo "Aguardando MySQL estar disponível na Railway..."
-until mysqladmin ping -h$MYSQLHOST -P$MYSQLPORT -u$MYSQLUSER -p$MYSQLPASSWORD --silent; do
-  echo "Ainda aguardando..."
+until mysqladmin ping -h$DB_SERVER -P$DB_PORT -u$DB_USER -p$DB_PASSWORD --silent; do
+  echo "Ainda aguardando o banco de dados..."
   sleep 2
 done
 
-echo "Executando setup.php para criar tabelas..."
+# O RESTO DO SCRIPT
+echo "Executando script para criar tabelas..."
 php /var/www/html/app/repository/create-table.php
 php /var/www/html/app/repository/muscle-group/populate-muscle-groups.php
 

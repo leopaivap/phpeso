@@ -14,8 +14,8 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 # Copia TODOS os arquivos da sua aplicação para o diretório do servidor web
 COPY . /var/www/html
 
-# --- CORREÇÃO DE PERMISSÃO ADICIONADA ---
-# Muda o dono dos arquivos para o usuário do Apache (www-data)
+# --- LINHA CRÍTICA PARA AS PERMISSÕES ---
+# Garanta que esta linha existe e está correta
 RUN chown -R www-data:www-data /var/www/html
 
 # Copia o script de inicialização para um local de fácil acesso

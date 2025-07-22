@@ -11,9 +11,12 @@ RUN a2enmod rewrite
 # Copia o arquivo de configuração do Apache
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# --- A CORREÇÃO CRÍTICA ESTÁ AQUI ---
 # Copia TODOS os arquivos da sua aplicação para o diretório do servidor web
 COPY . /var/www/html
+
+# --- CORREÇÃO DE PERMISSÃO ADICIONADA ---
+# Muda o dono dos arquivos para o usuário do Apache (www-data)
+RUN chown -R www-data:www-data /var/www/html
 
 # Copia o script de inicialização para um local de fácil acesso
 COPY setup.sh /setup.sh

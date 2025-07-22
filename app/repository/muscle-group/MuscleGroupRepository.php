@@ -11,27 +11,20 @@ class MuscleGroupRepository implements RepositoryInterface
     }
     public function selectAll(): array
     {
-        $muscleGroups = [];
         try {
-            $sql = "
-            SELECT id, name FROM muscle_groups ORDER BY name ASC;
-            ";
-
+            $sql = "SELECT id, name FROM muscle_groups ORDER BY name ASC;";
             $stmt = $this->connection->prepare($sql);
-
             $stmt->execute();
-            $muscleGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $muscleGroups;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Erro ao buscar grupos musculares: " . $e->getMessage();
             return [];
         }
     }
 
-    public function insert(object $entity): bool
+    public function insert(object $entity): ?int
     {
-        return false;
+        return null;
     }
     public function update(int $id, object $entity): bool
     {
@@ -41,6 +34,5 @@ class MuscleGroupRepository implements RepositoryInterface
     {
         return false;
     }
-
 }
 ?>

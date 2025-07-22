@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../service/workout/WorkoutService.php';
+require_once __DIR__ . '/../../service/exercise/ExerciseService.php';
 require_once __DIR__ . '/../BaseController.php';
 require_once __DIR__ . '/../../service/user/UserService.php';
 
@@ -8,33 +9,36 @@ class WorkoutController extends BaseController
 {
     private WorkoutService $workoutService;
     private UserService $userService;
+    private ExerciseService $exerciseService;
 
     public function __construct()
     {
         parent::__construct();
         $this->workoutService = new WorkoutService();
         $this->userService = new UserService();
+        $this->exerciseService = new ExerciseService();
     }
 
-    public function list(): void
+    public function list(array $data = []): void
     {
-        $workouts = $this->workoutService->selectAll();
-        $students = $this->userService->selectAllByRole("client");
-        $trainerList = $this->userService->selectAllByRole("trainer");
+        $user_id = $_SESSION['user_id'];
+        $user_role = $_SESSION['user_role'];
+
+        $workouts = $this->workoutService->selectAll($user_id, $user_role);
+        $clients = ($user_role !== 'client') ? $this->userService->selectAllByRole("client") : [];
+
+        $trainers = ($user_role === 'admin') ? $this->userService->selectAllByRole("trainer") : [];
+
+        $trainer_id_for_exercises = ($user_role === 'trainer') ? $user_id : null;
+        $available_exercises = ($user_role !== 'client') ? $this->exerciseService->selectAll($trainer_id_for_exercises) : [];
 
         $editing = false;
-        $workout_form_data = [
-            'id' => null,
-            'name' => '',
-            'description' => '',
-            'student_id' => '',
-            'trainer_id' => '',
-        ];
+        $workout_form_data = ['id' => null, 'name' => '', 'description' => '', 'client_ids' => [], 'exercise_ids' => []];
 
         if (isset($_GET['id']) && !empty($_GET['id'])) {
+            $this->checkOwnership($_GET['id']);
             $editing = true;
-            $id = $_GET['id'];
-            $workout_data_from_db = $this->workoutService->findById($id);
+            $workout_data_from_db = $this->workoutService->findById($_GET['id']);
             if ($workout_data_from_db) {
                 $workout_form_data = $workout_data_from_db;
             }
@@ -42,78 +46,62 @@ class WorkoutController extends BaseController
         require_once __DIR__ . '/../../view/workout/workouts.php';
     }
 
+    public function getDetails(int $id, array $data = []): void
+    {
+        header('Content-Type: application/json');
+        $details = $this->workoutService->findExercisesForWorkout($id);
+        echo json_encode($details);
+        exit;
+    }
+
     public function insert(array $data): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $response = $this->workoutService->insert($data);
-            if ($response) {
-                // CORREÇÃO: Redireciona para a ROTA de lista de treinos
-                header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
-                exit;
+            if ($this->workoutService->insert($data)) {
+                $_SESSION['success_message'] = 'Treino cadastrado com sucesso!';
             } else {
-                echo "Erro ao cadastrar treino.";
+                $_SESSION['error_message'] = 'Erro ao cadastrar treino. Verifique os campos.';
             }
         }
+        header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
+        exit;
     }
 
     public function update(int $id, array $data): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $response = $this->workoutService->update($id, $data);
-            if ($response) {
-                // CORREÇÃO: Redireciona para a ROTA de lista de treinos
-                header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
-                exit;
+            $this->checkOwnership($id);
+            if ($this->workoutService->update($id, $data)) {
+                $_SESSION['success_message'] = 'Treino atualizado com sucesso!';
             } else {
-                echo "Erro ao alterar treino.";
+                $_SESSION['error_message'] = 'Erro ao atualizar treino.';
             }
         }
+        header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
+        exit;
     }
 
-    public function selectAll(string $method): ?array
+    public function delete(int $id, array $data = []): void
     {
-        if ($method === 'GET') {
-            $workouts = $this->workoutService->selectAll();
-
-            if ($workouts) {
-                return $workouts;
-            } else if (empty($workouts)) {
-                return [];
-            } else {
-                echo "Erro ao buscar os treinos.";
-                return null;
-            }
+        $this->checkOwnership($id);
+        if ($this->workoutService->delete($id)) {
+            $_SESSION['success_message'] = 'Treino apagado com sucesso!';
+        } else {
+            $_SESSION['error_message'] = 'Erro ao apagar treino.';
         }
-        return null;
+        header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
+        exit;
     }
 
-    public function findById($id, $method): ?array
+    private function checkOwnership(int $workoutId): void
     {
-        if ($method === "GET") {
-            $workout = $this->workoutService->findById($id);
-            if ($workout) {
-                return $workout;
-            }
-            return null;
-        }
-        return null;
-    }
-
-    public function delete(int $id, array $data, string $method): void
-    {
-        if ($id === null || empty($id))
+        if (in_array($_SESSION['user_role'], ['admin', 'client']))
             return;
 
-        if ($method === 'delete') { // 'delete' vindo da URL
-            $response = $this->workoutService->delete($id);
-
-            if ($response) {
-                header('Location: /phpeso/index.php?controller=workout&action=list');
-                exit;
-            } else {
-                echo "Erro ao deletar o item.";
-                require 'index.php';
-            }
+        $workout = $this->workoutService->findById($workoutId);
+        if (!$workout || $workout['trainer_id'] != $_SESSION['user_id']) {
+            header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
+            exit;
         }
     }
 }

@@ -2,42 +2,41 @@
 
 require_once __DIR__ . '/../../service/user/UserService.php';
 require_once __DIR__ . '/../BaseController.php';
+require_once __DIR__ . '/../../repository/user/UserRepository.php';
 
-class UserController extends BaseController
+class UserController
 {
-    private UserService $userService;
+    private ?UserService $userService = null;
 
-    public function __construct()
+    private function getUserService(): UserService
     {
-        // O construtor do BaseController já inicia a sessão e verifica o login
-        // para as páginas protegidas.
+        if ($this->userService === null) {
+            $this->userService = new UserService();
+        }
+        return $this->userService;
     }
 
-    // Ações públicas (não precisam de login)
-    public function showLogin(): void
+    // Ações Públicas
+    public function showLogin(array $data = []): void
     {
         require_once __DIR__ . '/../../view/user/login.php';
     }
-
-    public function showRegister(): void
+    public function showRegister(array $data = []): void
     {
         require_once __DIR__ . '/../../view/user/register.php';
     }
 
     public function insert(array $data): void
     {
-        $this->userService = new UserService();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $response = $this->userService->insert($data);
-            if ($response) {
+            if ($this->getUserService()->insert($data)) {
+                $_SESSION['success_message'] = "Usuário cadastrado com sucesso! Faça o login.";
                 header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
-                exit;
-            } else {
-                $_SESSION['register_error'] = "Erro ao cadastrar o usuário. Tente novamente.";
-                header('Location: ' . BASE_URL . 'index.php?controller=user&action=showRegister');
                 exit;
             }
         }
+        header('Location: ' . BASE_URL . 'index.php?controller=user&action=showRegister');
+        exit;
     }
 
     public function login(array $data): void
@@ -46,21 +45,13 @@ class UserController extends BaseController
             return;
         if (session_status() === PHP_SESSION_NONE)
             session_start();
-
-        $username = $data['username'] ?? '';
-        $password = $data['password'] ?? '';
-
-        require_once __DIR__ . "/../../repository/user/UserRepository.php";
-        $userRepository = new UserRepository();
-        $user = $userRepository->findByUsername($username);
-
-        if ($user && password_verify($password, $user['password'])) {
+        $user = (new UserRepository())->findByUsername($data['username'] ?? '');
+        if ($user && password_verify($data['password'] ?? '', $user['password'])) {
             $_SESSION['user_loggedin'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_username'] = $user['username'];
             $_SESSION['user_firstname'] = $user['firstName'];
-            $_SESSION['user_role'] = $user['role']; // GUARDA A PERMISSÃO NA SESSÃO
-
+            $_SESSION['user_role'] = $user['role'];
             header('Location: ' . BASE_URL . 'index.php');
             exit;
         } else {
@@ -70,32 +61,29 @@ class UserController extends BaseController
         }
     }
 
-    public function logout(): void
+    public function logout(array $data = []): void
     {
         if (session_status() === PHP_SESSION_NONE)
             session_start();
-        $_SESSION = array();
         session_destroy();
         header('Location: ' . BASE_URL . 'index.php?controller=user&action=showLogin');
         exit;
     }
 
-    // Ações de Administrador
+    // --- Ações de Administrador ---
     private function requireAdmin(): void
     {
-        parent::__construct(); // Garante que está logado
-        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-            // Se não for admin, redireciona para a home
+        new BaseController(); // Garante que está logado
+        if ($_SESSION['user_role'] !== 'admin') {
             header('Location: ' . BASE_URL . 'index.php');
             exit;
         }
-        $this->userService = new UserService();
     }
 
-    public function list(): void
+    public function list(array $data = []): void
     {
-        $this->requireAdmin(); // Protege a página
-        $users = $this->userService->selectAll();
+        $this->requireAdmin();
+        $users = $this->getUserService()->selectAll();
         require_once __DIR__ . '/../../view/user/users.php';
     }
 
@@ -104,31 +92,27 @@ class UserController extends BaseController
         $this->requireAdmin();
         $role = $data['role'] ?? null;
         if ($id && $role) {
-            $response = $this->userService->updateRole($id, $role);
-            if ($response) {
-                $_SESSION['success_message'] = "Permissão do usuário atualizada com sucesso!";
+            if ($this->getUserService()->updateRole($id, $role)) {
+                $_SESSION['success_message'] = "Permissão atualizada!";
             } else {
-                $_SESSION['error_message'] = "Erro ao atualizar a permissão.";
+                $_SESSION['error_message'] = "Erro ao atualizar permissão.";
             }
         }
         header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
         exit;
     }
 
-    public function deleteUser(int $id): void
+    public function deleteUser(int $id, array $data = []): void
     {
         $this->requireAdmin();
         if ($id === $_SESSION['user_id']) {
             $_SESSION['error_message'] = "Você não pode apagar a si mesmo.";
-            header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
-            exit;
-        }
-
-        $response = $this->userService->delete($id);
-        if ($response) {
-            $_SESSION['success_message'] = "Usuário apagado com sucesso!";
         } else {
-            $_SESSION['error_message'] = "Erro ao apagar o usuário.";
+            if ($this->getUserService()->delete($id)) {
+                $_SESSION['success_message'] = "Usuário apagado!";
+            } else {
+                $_SESSION['error_message'] = "Erro ao apagar usuário.";
+            }
         }
         header('Location: ' . BASE_URL . 'index.php?controller=user&action=list');
         exit;

@@ -1,41 +1,43 @@
 <?php
 
-require_once './app/service/exercise/ExerciseService.php';
+require_once __DIR__ . '/../../service/exercise/ExerciseService.php';
 require_once __DIR__ . '/../BaseController.php';
 require_once __DIR__ . '/../../repository/muscle-group/MuscleGroupRepository.php';
+require_once __DIR__ . '/../../repository/exercise/ExerciseRepository.php';
 
 class ExerciseController extends BaseController
 {
-
     private ExerciseService $exerciseService;
 
     public function __construct()
     {
         parent::__construct();
-
         $this->exerciseService = new ExerciseService();
     }
 
-    public function list(): void
+    public function list(array $data = []): void
     {
+        $user_role = $_SESSION['user_role'];
+        if ($user_role === 'client') {
+            header('Location: ' . BASE_URL . 'index.php?controller=workout&action=list');
+            exit;
+        }
 
-        $exercises = $this->exerciseService->selectAll();
+        $user_id = $_SESSION['user_id'];
+        $trainer_id_to_filter = ($user_role === 'trainer') ? $user_id : null;
+        $exercises = $this->exerciseService->selectAll($trainer_id_to_filter);
 
         $muscleGroupRepository = new MuscleGroupRepository();
         $muscleGroups = $muscleGroupRepository->selectAll();
 
         $editing = false;
-        $exercise_form_data = [
-            'name' => '',
-            'exercise_type' => '',
-            'description' => '',
-            'muscle_group_id' => '',
-            'difficulty' => 'beginner'
-        ];
+        $exercise_form_data = ['id' => null, 'name' => '', 'exercise_type' => '', 'description' => '', 'muscle_group_id' => '', 'difficulty' => 'beginner'];
 
         if (isset($_GET['id']) && !empty($_GET['id'])) {
-            $id = $_GET['id'];
+            $this->checkOwnership($_GET['id']);
             $editing = true;
+            $repo = new ExerciseRepository();
+            $exercise_form_data = $repo->findById($_GET['id']) ?: $exercise_form_data;
         }
 
         require_once __DIR__ . '/../../view/exercise/exercises.php';
@@ -43,67 +45,49 @@ class ExerciseController extends BaseController
 
     public function insert(array $data): void
     {
-        if ($data === null || empty($data))
-            return;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $response = $this->exerciseService->insert($data);
-            if ($response) {
-                header('Location: /phpeso/index.php?controller=exercise&action=list');
-                exit;
-            } else {
-                echo "Erro ao cadastrar o exercício.";
-                require '/phpeso/index.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($_SESSION['user_role'], ['admin', 'trainer'])) {
+            if ($this->exerciseService->insert($data)) {
+                $_SESSION['success_message'] = 'Exercício cadastrado com sucesso!';
             }
         }
+        header('Location: ' . BASE_URL . 'index.php?controller=exercise&action=list');
+        exit;
     }
+
     public function update(int $id, array $data): void
     {
-        if ($data === null || empty($data) || $id === null || empty($id))
-            return;
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $response = $this->exerciseService->update($id, $data);
-            if ($response) {
-                header('Location: /phpeso/index.php?controller=exercise&action=list');
-                exit;
-            } else {
-                echo "Erro ao alterar o exercício.";
-                require 'index.php';
+            $this->checkOwnership($id);
+            if ($this->exerciseService->update($id, $data)) {
+                $_SESSION['success_message'] = 'Exercício atualizado com sucesso!';
             }
         }
+        header('Location: ' . BASE_URL . 'index.php?controller=exercise&action=list');
+        exit;
     }
-    public function selectAll(string $method): ?array
-    {
-        if ($method === 'GET') {
-            $response = $this->exerciseService->selectAll();
 
-            if ($response) {
-                return $response;
-            } else {
-                echo "Erro ao buscar os exercícios.";
-                return null;
-            }
-        }
-        return null;
-    }
-    public function delete(int $id, array $data, string $method): void
+    public function delete(int $id): void
     {
-        if ($id === null || empty($id))
+        $this->checkOwnership($id);
+        if ($this->exerciseService->delete($id)) {
+            $_SESSION['success_message'] = 'Exercício apagado com sucesso!';
+        } else {
+            $_SESSION['error_message'] = 'Erro ao apagar o exercício.';
+        }
+        header('Location: ' . BASE_URL . 'index.php?controller=exercise&action=list');
+        exit;
+    }
+
+    private function checkOwnership(int $exerciseId): void
+    {
+        if ($_SESSION['user_role'] === 'admin')
             return;
 
-        if ($method === 'delete') { // 'delete' vindo da URL
-            $response = $this->exerciseService->delete($id);
-
-            if ($response) {
-                header('Location: /phpeso/index.php?controller=exercise&action=list');
-                exit;
-            } else {
-                echo "Erro ao deletar o item.";
-                require 'index.php';
-            }
+        $repo = new ExerciseRepository();
+        $exercise = $repo->findById($exerciseId);
+        if (!$exercise || $exercise['trainer_id'] != $_SESSION['user_id']) {
+            header('Location: ' . BASE_URL . 'index.php?controller=exercise&action=list');
+            exit;
         }
     }
-
-
 }

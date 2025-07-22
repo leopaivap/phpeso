@@ -1,13 +1,14 @@
 <?php
 
-require_once "./app/model/exercise/Exercise.php";
-require_once "./app/service/ServiceInterface.php";
-require_once "./app/repository/exercise/ExerciseRepository.php";
-require_once "./app/exception/exercise/InvalidExerciseNameException.php";
-require_once "./app/exception/exercise/InvalidExerciseDifficultyException.php";
-require_once "./app/exception/exercise/InvalidExerciseTypeException.php";
-require_once "./app/exception/exercise/InvalidExerciseDescriptionException.php";
-require_once "./app/exception/exercise/InvalidExerciseMuscleGroupException.php";
+require_once __DIR__ . "/../../model/exercise/Exercise.php";
+require_once __DIR__ . "/../../service/ServiceInterface.php";
+require_once __DIR__ . "/../../repository/exercise/ExerciseRepository.php";
+require_once __DIR__ . "/../../exception/ValidationException.php";
+require_once __DIR__ . "/../../exception/exercise/InvalidExerciseNameException.php";
+require_once __DIR__ . "/../../exception/exercise/InvalidExerciseDifficultyException.php";
+require_once __DIR__ . "/../../exception/exercise/InvalidExerciseTypeException.php";
+require_once __DIR__ . "/../../exception/exercise/InvalidExerciseDescriptionException.php";
+require_once __DIR__ . "/../../exception/exercise/InvalidExerciseMuscleGroupException.php";
 
 class ExerciseService implements ServiceInterface
 {
@@ -19,108 +20,62 @@ class ExerciseService implements ServiceInterface
 
     public function insert(array $data): bool
     {
-        $exercise = $this->createExercise($data);
-        $response = false;
-
-        if ($exercise !== null) {
-            $response = $this->exerciseRepository->insert($exercise);
+        try {
+            $exercise = $this->createExercise($data);
+            $newId = $this->exerciseRepository->insert($exercise);
+            return $newId !== null;
+        } catch (ValidationException $e) {
+            $_SESSION['error_message'] = $e->getMessage();
+            return false;
         }
-
-        if ($response)
-            return true;
-
-        return false;
     }
 
     public function update(int $id, array $data): bool
     {
-        $exercise = $this->createExercise($data);
-        $response = false;
-
-        if ($exercise != null) {
-            $response = $this->exerciseRepository->update($id, $exercise);
+        try {
+            $exercise = $this->createExercise($data);
+            return $this->exerciseRepository->update($id, $exercise);
+        } catch (ValidationException $e) {
+            $_SESSION['error_message'] = $e->getMessage();
+            return false;
         }
-
-        if ($response)
-            return true;
-
-        return false;
     }
 
     public function delete(int $id): bool
     {
-        $response = false;
-
-        if ($id != null && !empty($id)) {
-            $response = $this->exerciseRepository->delete($id);
-        }
-
-        if ($response)
-            return true;
-
-        return false;
+        return $this->exerciseRepository->delete($id);
     }
 
-    public function selectAll(): array
+    public function selectAll(int $trainer_id = null): array
     {
-        $response = $this->exerciseRepository->selectAll();
-
-        if (!empty($response) && $response != null) {
-            return $response;
-        }
-
-        return [];
+        return $this->exerciseRepository->selectAll($trainer_id);
     }
 
-    private function createExercise(array $data): ?Exercise
+    private function createExercise(array $data): Exercise
     {
-        $isValidExerciseData = $this->validateExerciseData($data);
+        $this->validateExerciseData($data);
+        $exercise = new Exercise();
+        $exercise->setName($data['exercise_name']);
+        $exercise->setExerciseType($data['exercise_type']);
+        $exercise->setDescription($data['description']);
+        $exercise->setMuscleGroupId($data['muscle_group']);
+        $exercise->setDifficulty($data['difficulty']);
 
-        if ($isValidExerciseData) {
-
-            $exercise = new Exercise();
-            $exercise->setName($data['exercise_name']);
-            $exercise->setExerciseType($data['exercise_type']);
-            $exercise->setDescription($data['description']);
-            $exercise->setMuscleGroupId($data['muscle_group']);
-            $exercise->setDifficulty($data['difficulty']);
-
-            return $exercise;
-        }
-
-        return null;
+        $exercise->setTrainerId($_SESSION['user_id']);
+        return $exercise;
     }
 
-    private function validateExerciseData(array $data): bool
+    private function validateExerciseData(array $data): void
     {
-        $errors = [];
-        if (empty($data['exercise_name']) || strlen(trim($data['exercise_name'])) < 5 || strlen(trim($data['exercise_name'])) > 30) {
-            $errors[] = 'O campo "Nome do Exercício" é obrigatório e deve ter entre 5 e 30 caracteres.';
+        if (empty($data['exercise_name']) || strlen(trim($data['exercise_name'])) < 3)
             throw new InvalidExerciseNameException();
-        }
-
-        if (empty($data['exercise_type']) || strlen(trim($data['exercise_type'])) < 5 || strlen(trim($data['exercise_type'])) > 30) {
-            $errors[] = 'O campo "Tipo de Exercício" é obrigatório e deve ter entre 5 e 30 caracteres.';
+        if (empty($data['exercise_type']))
             throw new InvalidExerciseTypeException();
-        }
-        if (empty($data['description']) || strlen(trim($data['description'])) < 5 || strlen(trim($data['description'])) > 55) {
-            $errors[] = 'O campo "Descrição" é obrigatório e deve ter entre 5 e 55 caracteres.';
+        if (empty($data['description']))
             throw new InvalidExerciseDescriptionException();
-        }
-
-        if (empty($data['muscle_group'])) {
-            $errors[] = 'O campo "Grupo Muscular" é obrigatório.';
+        if (empty($data['muscle_group']))
             throw new InvalidExerciseMuscleGroupException();
-        }
-
-        if (empty($data['difficulty'])) {
-            $errors[] = 'O campo "Dificuldade" é obrigatório.';
+        if (empty($data['difficulty']))
             throw new InvalidExerciseDifficultyException();
-        }
-
-        if (empty($errors))
-            return true;
-
-        return false;
     }
 }

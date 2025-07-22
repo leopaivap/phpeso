@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_DATABASE: db_phpeso
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_ROOT_PASSWORD: ""
       MYSQL_ROOT_HOST: "%"
     volumes:
       - mysql_data:/var/lib/mysql
@@ -22,13 +22,23 @@ services:
     ports:
       - "80:80"
     depends_on:
-      mysql:
-        condition: service_started
+      - mysql
     environment:
       DB_SERVER: mysql
       DB_NAME: db_phpeso
       DB_USER: root
       DB_PASSWORD: ""
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    depends_on:
+      - mysql
+    restart: always
 
 volumes:
   mysql_data:

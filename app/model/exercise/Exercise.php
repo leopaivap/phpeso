@@ -7,6 +7,7 @@ class Exercise
     private int $muscleGroupId;
     private string $difficulty;
     private string $description;
+    private int $trainerId;
     private string $createdAt;
 
     public function __construct()
@@ -18,54 +19,53 @@ class Exercise
     {
         return $this->name;
     }
-
     public function setName(string $name): void
     {
         $this->name = $name;
     }
-
     public function getExerciseType(): string
     {
         return $this->exerciseType;
     }
-
     public function setExerciseType(string $type): void
     {
         $this->exerciseType = $type;
     }
-
     public function getMuscleGroupId(): int
     {
         return $this->muscleGroupId;
     }
-
     public function setMuscleGroupId(int $id): void
     {
         $this->muscleGroupId = $id;
     }
-
     public function getDifficulty(): string
     {
         return $this->difficulty;
     }
-
     public function setDifficulty(string $difficulty): void
     {
         $this->difficulty = $difficulty;
     }
-
     public function getDescription(): string
     {
         return $this->description;
     }
-
     public function setDescription(string $description): void
     {
         $this->description = $description;
     }
-
     public function getCreatedAt(): string
     {
         return $this->createdAt;
+    }
+
+    public function getTrainerId(): int
+    {
+        return $this->trainerId;
+    }
+    public function setTrainerId(int $trainerId): void
+    {
+        $this->trainerId = $trainerId;
     }
 }

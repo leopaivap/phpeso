@@ -1,5 +1,4 @@
 <?php
-// apenas para teste, futuramente tera cadastro de grupos musculares
 require_once __DIR__ . "/../Connection.php";
 
 try {

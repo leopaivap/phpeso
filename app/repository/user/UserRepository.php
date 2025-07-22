@@ -14,40 +14,15 @@ class UserRepository implements RepositoryInterface
         $this->connection = Connection::getInstance()->getConnection();
     }
 
-    public function insert(object $entity): bool
+    public function insert(object $entity): ?int
     {
-
         try {
             $sql = "
                 INSERT INTO users 
-                (
-                    firstName, 
-                    lastName, 
-                    phoneNumber, 
-                    gender, 
-                    birth_date, 
-                    username, 
-                    email, 
-                    password, 
-                    role, 
-                    created_at
-                ) 
-                VALUES (
-                    :firstName, 
-                    :lastName, 
-                    :phoneNumber, 
-                    :gender, 
-                    :birth_date, 
-                    :username, 
-                    :email, 
-                    :password, 
-                    :role, 
-                    :created_at
-                );
+                (firstName, lastName, phoneNumber, gender, birth_date, username, email, password, role, created_at) 
+                VALUES (:firstName, :lastName, :phoneNumber, :gender, :birth_date, :username, :email, :password, :role, :created_at);
             ";
-
             $stmt = $this->connection->prepare($sql);
-
             $stmt->execute([
                 ':firstName' => $entity->getFirstName(),
                 ':lastName' => $entity->getLastName(),
@@ -60,122 +35,28 @@ class UserRepository implements RepositoryInterface
                 ':role' => $entity->getRole(),
                 ':created_at' => $entity->getCreatedAt()
             ]);
-
-            return true;
+            return (int) $this->connection->lastInsertId();
         } catch (PDOException $e) {
             echo "Erro ao cadastrar usuário: " . $e->getMessage();
-            return false;
+            return null;
         }
     }
 
     public function update(int $id, object $entity): bool
     {
-        try {
-            $sql = "
-                UPDATE INTO users AS u SET
-                u.firstName   = :firstName,
-                u.lastName    = :lastName,
-                u.phoneNumber = :phoneNumber,
-                u.gender      = :gender,
-                u.birth_date  = :birth_date,
-                u.username    = :username,
-                u.email       = :email
-                WHERE u.id = :id;
-            ";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                "firstname" => $entity->getFirstName(),
-                "lastName" => $entity->getLastName(),
-                "phoneNumber" => $entity->getPhoneNumber(),
-                "gender" => $entity->getGender(),
-                "birth_date" => $entity->getBirthDate(),
-                "username" => $entity->getUsername(),
-                "email" => $entity->getEmail(),
-                "id" => $id
-            ]);
-        } catch (PDOException $e) {
-            echo "Erro ao alterar dados do usuário: " . $e->getMessage();
-            return false;
-        }
+        // Este método não está sendo usado, mas mantemos para conformidade
         return false;
     }
+
     public function selectAll(): array
     {
-        $users = [];
         try {
-            $sql = "
-            SELECT 
-            u.id, 
-            u.username, 
-            u.firstName, 
-            u.lastName, 
-            u.email, 
-            u.phoneNumber, 
-            u.gender,
-            u.birth_date,
-            u.role
-            FROM users AS u;";
-
+            $sql = "SELECT u.id, u.username, u.firstName, u.lastName, u.email, u.phoneNumber, u.gender, u.birth_date, u.role FROM users AS u;";
             $stmt = $this->connection->prepare($sql);
-
             $stmt->execute();
-
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $users;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Erro ao buscar usuários: " . $e->getMessage();
-            return [];
-        }
-    }
-
-    public function findById(int $id): ?array
-    {
-        try {
-            $sql = "
-                SELECT id, firstName, lastName, username, email, phoneNumber, gender, role FROM users WHERE id = :id;
-            ";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                ":id" => $id
-            ]);
-            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            return $userData;
-        } catch (PDOException $e) {
-            echo "Erro ao buscar usuário por ID: " . $e->getMessage();
-            return null;
-        }
-    }
-
-    public function selectAllByRole(string $role): array
-    {
-        $users = [];
-        try {
-            $sql = "
-            SELECT 
-            u.id, 
-            u.username, 
-            u.firstName, 
-            u.lastName
-            FROM users AS u 
-            WHERE u.role = :role;";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                ":role" => $role
-            ]);
-
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $users;
-        } catch (PDOException $e) {
-            echo "Erro ao buscar usuários por função: " . $e->getMessage();
             return [];
         }
     }
@@ -184,13 +65,8 @@ class UserRepository implements RepositoryInterface
     {
         try {
             $sql = "DELETE FROM users WHERE id = :id";
-
             $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                ':id' => $id
-            ]);
-
+            $stmt->execute([':id' => $id]);
             return true;
         } catch (PDOException $e) {
             echo "Erro ao deletar usuário: " . $e->getMessage();
@@ -198,6 +74,7 @@ class UserRepository implements RepositoryInterface
         }
     }
 
+    // Métodos específicos do UserRepository que não estão na interface
     public function findByUsername(string $username): ?array
     {
         try {
@@ -212,15 +89,25 @@ class UserRepository implements RepositoryInterface
         }
     }
 
+    public function selectAllByRole(string $role): array
+    {
+        try {
+            $sql = "SELECT u.id, u.username, u.firstName, u.lastName FROM users AS u WHERE u.role = :role;";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute([":role" => $role]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Erro ao buscar usuários por função: " . $e->getMessage();
+            return [];
+        }
+    }
+
     public function updateRole(int $id, string $role): bool
     {
         try {
             $sql = "UPDATE users SET role = :role WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
-            $stmt->execute([
-                ':role' => $role,
-                ':id' => $id
-            ]);
+            $stmt->execute([':role' => $role, ':id' => $id]);
             return true;
         } catch (PDOException $e) {
             echo "Erro ao alterar a permissão do usuário: " . $e->getMessage();

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Gerenciar Usuários - PhPeso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>public/css/style.css">
 </head>
@@ -62,7 +63,7 @@
                                     <a href="<?= BASE_URL ?>index.php?controller=user&action=deleteUser&id=<?= $user['id'] ?>"
                                         class="btn btn-sm btn-danger"
                                         onclick="return confirm('Tem certeza que deseja apagar este usuário?');">
-                                        Apagar
+                                        <i class="fas fa-trash-alt"></i>
                                     </a>
                                 <?php endif; ?>
                             </td>

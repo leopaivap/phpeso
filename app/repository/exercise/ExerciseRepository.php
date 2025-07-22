@@ -1,114 +1,56 @@
 <?php
+require_once __DIR__ . "/../../repository/Connection.php";
+require_once __DIR__ . "/../../repository/RepositoryInterface.php";
 
-require_once "./app/repository/Connection.php";
-require_once "./app/repository/RepositoryInterface.php";
-
-date_default_timezone_set('America/Sao_Paulo');
 class ExerciseRepository implements RepositoryInterface
 {
     private $connection;
-
     public function __construct()
     {
         $this->connection = Connection::getInstance()->getConnection();
     }
 
-    public function insert(object $entity): bool
+    public function insert(object $entity): ?int
     {
         try {
-            $sql = "
-            INSERT INTO exercises 
-            (
-                name, 
-                muscle_group_id, 
-                exercise_type, 
-                difficulty, 
-                description, 
-                created_at
-            )
-            VALUES
-            (
-                :name, 
-                :muscle_group_id, 
-                :exercise_type, 
-                :difficulty, 
-                :description, 
-                :created_at
-            )";
-
+            $sql = "INSERT INTO exercises (name, muscle_group_id, exercise_type, difficulty, description, trainer_id, created_at) VALUES (:name, :muscle_group_id, :exercise_type, :difficulty, :description, :trainer_id, :created_at)";
             $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                ":name" => $entity->getName(),
-                ":muscle_group_id" => $entity->getMuscleGroupId(),
-                ":exercise_type" => $entity->getExerciseType(),
-                ":difficulty" => $entity->getDifficulty(),
-                ":description" => $entity->getDescription(),
-                ":created_at" => $entity->getCreatedAt(),
-            ]);
-
-            return true;
+            $stmt->execute([':name' => $entity->getName(), ':muscle_group_id' => $entity->getMuscleGroupId(), ':exercise_type' => $entity->getExerciseType(), ':difficulty' => $entity->getDifficulty(), ':description' => $entity->getDescription(), ':trainer_id' => $entity->getTrainerId(), ':created_at' => $entity->getCreatedAt()]);
+            return (int) $this->connection->lastInsertId();
         } catch (PDOException $e) {
-            echo "Erro ao cadastrar exercício: " . $e->getMessage();
-            return false;
+            return null;
         }
     }
-    /*
-    Erro ao alterar dados do exercício: SQLSTATE[HY093]: Invalid parameter number: parameter was not definedErro ao alterar o exercício.
-    Warning: require(/phpeso/index.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php on line 41
-    Fatal error: Uncaught Error: Failed opening required '/phpeso/index.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php:41 Stack trace: #0 C:\xampp\htdocs\phpeso\index.php(38): ExerciseController->update(7, Array) #1 {main} thrown in C:\xampp\htdocs\phpeso\app\controller\exercise\ExerciseController.php on line 41
-    */
+
     public function update(int $id, object $entity): bool
     {
         try {
-            $sql = "
-            UPDATE exercises SET
-            name = :name,
-            muscle_group_id = :muscle_group_id,
-            exercise_type = :exercise_type,
-            difficulty = :difficulty,
-            description = :description
-            WHERE id = :id
-            ";
+            $sql = "UPDATE exercises SET name = :name, muscle_group_id = :muscle_group_id, exercise_type = :exercise_type, difficulty = :difficulty, description = :description WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
-            $stmt->execute([
-                ":name" => $entity->getName(),
-                ":muscle_group_id" => $entity->getMuscleGroupId(),
-                ":exercise_type" => $entity->getExerciseType(),
-                ":difficulty" => $entity->getDifficulty(),
-                ":description" => $entity->getDescription(),
-                ":id" => $id
-            ]);
+            $stmt->execute([':name' => $entity->getName(), ':muscle_group_id' => $entity->getMuscleGroupId(), ':exercise_type' => $entity->getExerciseType(), ':difficulty' => $entity->getDifficulty(), ':description' => $entity->getDescription(), ':id' => $id]);
             return true;
         } catch (PDOException $e) {
-            echo "Erro ao alterar dados do exercício: " . $e->getMessage();
             return false;
         }
     }
 
-    public function selectAll(): array
+    public function selectAll(int $trainer_id = null): array
     {
-        $exercises = [];
         try {
-            $sql = "
-            SELECT
-            e.id,
-            e.name,
-            e.muscle_group_id,
-            e.exercise_type,
-            e.difficulty,
-            e.description
-            FROM exercises AS e;
-            ";
+            $sql = "SELECT e.*, u.firstName as trainerFirstName, u.lastName as trainerLastName 
+                    FROM exercises AS e 
+                    LEFT JOIN users u ON e.trainer_id = u.id";
+            if ($trainer_id !== null) {
+                $sql .= " WHERE e.trainer_id = :trainer_id";
+            }
 
             $stmt = $this->connection->prepare($sql);
-
+            if ($trainer_id !== null) {
+                $stmt->bindParam(':trainer_id', $trainer_id, PDO::PARAM_INT);
+            }
             $stmt->execute();
-
-            $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $exercises;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo "Erro ao buscar exercícios: " . $e->getMessage();
             return [];
         }
     }
@@ -116,18 +58,22 @@ class ExerciseRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         try {
-            $sql = "DELETE FROM exercises WHERE id = :id;";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute([
-                ":id" => $id
-            ]);
-
+            $stmt = $this->connection->prepare("DELETE FROM exercises WHERE id = :id;");
+            $stmt->execute([":id" => $id]);
             return true;
         } catch (PDOException $e) {
-            echo "Erro ao deletar exercício: " . $e->getMessage();
             return false;
+        }
+    }
+
+    public function findById(int $id): ?array
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM exercises WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        } catch (PDOException $e) {
+            return null;
         }
     }
 }

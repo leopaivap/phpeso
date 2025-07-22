@@ -12,20 +12,20 @@
                 <li class="nav-item"><span class="nav-link text-warning">Olá,
                         <?= htmlspecialchars($_SESSION['user_firstname']) ?>!</span></li>
                 <li class="nav-item"><a class="nav-link"
-                        href="<?= BASE_URL ?>index.php?controller=workout&action=list">Treinos</a>
-                </li>
-                <li class="nav-item"><a class="nav-link"
-                        href="<?= BASE_URL ?>index.php?controller=exercise&action=list">Exercícios</a></li>
+                        href="<?= BASE_URL ?>index.php?controller=workout&action=list">Treinos</a></li>
 
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                <?php if (in_array($_SESSION['user_role'], ['admin', 'trainer'])): ?>
                     <li class="nav-item"><a class="nav-link"
-                            href="<?= BASE_URL ?>index.php?controller=user&action=list">Usuários</a>
-                    </li>
+                            href="<?= BASE_URL ?>index.php?controller=exercise&action=list">Exercícios</a></li>
+                <?php endif; ?>
+
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                    <li class="nav-item"><a class="nav-link"
+                            href="<?= BASE_URL ?>index.php?controller=user&action=list">Usuários</a></li>
                 <?php endif; ?>
 
                 <li class="nav-item"><a class="nav-link"
-                        href="<?= BASE_URL ?>index.php?controller=user&action=logout">Logout</a>
-                </li>
+                        href="<?= BASE_URL ?>index.php?controller=user&action=logout">Logout</a></li>
             <?php else: ?>
                 <li class="nav-item"><a class="nav-link"
                         href="<?= BASE_URL ?>index.php?controller=user&action=showLogin">Login</a></li>

@@ -5,9 +5,10 @@
 echo "<h1>Iniciando configuração do ambiente...</h1>";
 
 try {
-    echo "<p>1. Criando banco de dados 'db_phpeso'...</p>";
-    require_once __DIR__ . '/app/repository/create-database.php';
-    echo "<p style='color:green;'>Banco de dados criado com sucesso (ou já existia).</p>";
+    // A Railway já cria o banco
+    // echo "<p>1. Criando banco de dados 'db_phpeso'...</p>";
+    // require_once __DIR__ . '/app/repository/create-database.php';
+    // echo "<p style='color:green;'>Banco de dados criado com sucesso (ou já existia).</p>";
 
     echo "<p>2. Criando tabelas...</p>";
     require_once './app/repository/create-table.php';

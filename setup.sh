@@ -8,9 +8,9 @@ until mysqladmin ping -h$DB_SERVER -P$DB_PORT -u$DB_USER -p$DB_PASSWORD --silent
 done
 
 # O RESTO DO SCRIPT
-echo "Executando script para criar tabelas..."
-php /var/www/html/app/repository/create-table.php
-php /var/www/html/app/repository/muscle-group/populate-muscle-groups.php
+echo "Executando setup.php..."
+php /var/www/html/setup.php
 
+# Inicia o servidor Apache.
 echo "Iniciando Apache..."
 exec apache2-foreground
